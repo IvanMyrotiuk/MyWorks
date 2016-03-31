@@ -6,14 +6,33 @@ public class Order {
 	private Long id;
 	private Customer customer;
 	private List<Pizza> pizzas;
+	private Status status;
 	private static long currentId = 0l;
 	
+	public enum Status{
+		NEW,IN_PROGRSS, CANCELED, DONE;
+	}
 	
 	public Order(Customer customer, List<Pizza> pizzas) {
 		this.customer = customer;
 		this.pizzas = pizzas;
 		this.id = ++currentId;
 	}
+	
+	
+	
+	public Status getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

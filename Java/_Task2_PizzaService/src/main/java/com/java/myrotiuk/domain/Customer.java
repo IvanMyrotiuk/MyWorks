@@ -3,6 +3,7 @@ package com.java.myrotiuk.domain;
 public class Customer {
 	private int id;
 	private String name;
+	private Address address;
 	private static int currentId = 1;
 	
 //	public Customer(int id, String name) {
@@ -10,11 +11,26 @@ public class Customer {
 //		this.name = name;
 //	}
 
-	public Customer(String name) {
+	public Customer(String name, Address address) {
+		this.address = address;
 		this.name = name;
 		this.id = currentId++;
 	}
 	
+	
+	
+	public Address getAddress() {
+		return address;
+	}
+
+
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+
+
 	public int getId() {
 		return id;
 	}
