@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
+import com.java.myrotiuk.domain.Order.OrderStatus;
 import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.repository.order.InMemOrderRepository;
 import com.java.myrotiuk.repository.order.OrderRepository;
@@ -17,20 +18,30 @@ public class SimpleOrderService implements OrderService {
 	private OrderRepository orderRepository = new InMemOrderRepository();
 
 	@Override
-	public Order placeNewOrder(Customer customer, Integer... pizzasID) {
+	public Order placeNewOrder(Order newOrder) {
 
-		int countPizzas = pizzasID.length;
-		
-		List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
-
-		Order newOrder = createOrder(customer, pizzas);
-
-		orderRepository.saveOrder(newOrder); // set Order Id and save Order to
-												// in-memory list
+		int countPizzas = newOrder.getPizzas().size();
+		if( countPizzas > 0 && countPizzas <= 10 
+				&& newOrder.getOrderStatus() == OrderStatus.NEW){
+			orderRepository.saveOrder(newOrder); // set Order Id and save Order to in-memory list
+			return newOrder;
+		}
+		newOrder.setOrderStatusToCancel();
 		return newOrder;
 	}
-
-	private Order createOrder(Customer customer, List<Pizza> pizzas) {
+	
+	public boolean addPizzaToOrder(Order order, Integer... pizzasID){
+		if(order.getOrderStatus() == OrderStatus.NEW 
+				|| order.getOrderStatus() == OrderStatus.CANCELED){
+			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
+			return order.addPizzas(pizzas);
+		}
+		return false;
+	}
+	
+	
+	public  Order createOrder(Customer customer, Integer... pizzasID) {
+		List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
 		Order newOrder = new Order(customer, pizzas);
 		return newOrder;
 	}
@@ -45,5 +56,4 @@ public class SimpleOrderService implements OrderService {
 		}
 		return pizzas;
 	}
-
 }

@@ -5,6 +5,7 @@ import com.java.myrotiuk.domain.Order;
 
 public interface OrderService {
 
-	Order placeNewOrder(Customer customer, Integer... pizzasID);
+	Order createOrder(Customer customer, Integer... pizzasID);
+	Order placeNewOrder(Order newOrder);
 
 }
