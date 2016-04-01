@@ -13,9 +13,11 @@ public class PizzaApp {
             Order order;
 
             OrderService orderService = new SimpleOrderService();
+            order = orderService.createOrder(customer, 1, 2, 3);
+            order = orderService.placeNewOrder(order);
            // order = orderService.placeNewOrder(customer, 1, 2, 3);
 
-           // System.out.println(order);
+           System.out.println(order);
     }
 
 }
