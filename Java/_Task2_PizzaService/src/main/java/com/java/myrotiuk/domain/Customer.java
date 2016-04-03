@@ -1,33 +1,27 @@
 package com.java.myrotiuk.domain;
 
+import java.util.Optional;
+
 public class Customer {
 	private int id;
 	private String name;
 	private Address address;
-	private AccruedCard card;
+	private Optional<AccruedCard> card;
 	private static int currentId = 1;
-
-	public Customer(String name, Address address) {
-		this.address = address;
-		this.name = name;
-		this.card = null;
-		this.id = currentId++;
-	}
 	
-	public Customer(String name, Address address, AccruedCard card) {
+	public Customer(String name, Address address, Optional<AccruedCard> card) {
 		this.address = address;
 		this.name = name;
 		this.card = card;
 		this.id = currentId++;
+		//Optional.of//(address);
 	}
 	
-	
-	
-	public AccruedCard getCard() {
+	public Optional<AccruedCard> getCard() {
 		return card;
 	}
 
-	public void setCard(AccruedCard card) {
+	public void setCard(Optional<AccruedCard> card) {
 		this.card = card;
 	}
 

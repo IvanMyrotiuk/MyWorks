@@ -5,167 +5,159 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import com.java.myrotiuk.domain.discount.Discount;
+import com.java.myrotiuk.exception.StatusOrderException;
 
 public class Order {
 	private Long id;
 	private Customer customer;
 	private List<Pizza> pizzas;
-	private OrderStatus status;
-	private static long currentId = 0l;
-	private double orderPriceWithDiscount = -1d;
-	private double orderPrice = -1d;
-	private boolean changeOrder = true;
-	private boolean changeOrderForDiscount = true;
-	private List<Discount> discounts = new ArrayList<>();
-	
-	public enum OrderStatus{
-		NEW,IN_PROGRSS, CANCELED, DONE;
-	}
+	private static long currentId;
+	private double orderPrice;
+	private OrderStatus orderStatus;
 	
 	public Order(Customer customer, List<Pizza> pizzas) {
 		this.customer = customer;
 		this.pizzas = pizzas;
-		this.status = OrderStatus.NEW;
+		this.orderStatus = OrderStatus.NEW;
 		this.id = ++currentId;
 	}
-	
-	
-	public boolean setOrderStatusToNew(){
-		if(this.status == OrderStatus.CANCELED || this.status == OrderStatus.DONE){
-			this.status = OrderStatus.NEW;
-			return true;
-		}
-		return false;
+
+	public enum OrderStatus {
+		NEW {
+			@Override
+			OrderStatus next() {
+				return IN_PROGRESS;
+			}
+
+			OrderStatus cancel() {
+				return CANCELED;
+			}
+		},
+		IN_PROGRESS {
+			@Override
+			OrderStatus next() {
+				return OrderStatus.DONE;
+			}
+
+			OrderStatus cancel() {
+				throw new StatusOrderException("You can not switch"+IN_PROGRESS+" status to "+CANCELED);
+			}
+		},
+		CANCELED {
+			@Override
+			OrderStatus next() {
+				throw new StatusOrderException("You can not switch"+CANCELED+" status to something else");
+			}
+
+			OrderStatus cancel() {
+				return OrderStatus.CANCELED;
+			}
+		},
+		DONE {
+			@Override
+			OrderStatus next() {
+				throw new StatusOrderException("You can not switch"+OrderStatus.DONE+" status to something else");
+			}
+
+			OrderStatus cancel() {
+				throw new StatusOrderException("You can not switch"+OrderStatus.DONE+" status to something" + OrderStatus.CANCELED);
+			}
+		};
+		abstract OrderStatus cancel();
+		abstract OrderStatus next();
 	}
 	
-	public boolean setOrderStatusToProgress(){
-		if(this.status == OrderStatus.NEW){
-			this.status = OrderStatus.IN_PROGRSS;
-			return true;
-		}
-		return false;
+	public Order next(){
+		this.orderStatus = orderStatus.next();
+		return this;
 	}
 	
-	public boolean setOrderStatusToDone(){
-		if(this.status == OrderStatus.IN_PROGRSS){
-			countOrderPriceWithDiscount();
-			customer.getCard().setAmount(orderPriceWithDiscount);
-			this.status = OrderStatus.DONE;
-			return true;
-		}
-		return false;
+	public Order cancel(){
+		this.orderStatus = orderStatus.cancel();
+		return this;
 	}
-	
-	public boolean setOrderStatusToCancel(){
-		if(this.status == OrderStatus.NEW || this.status == OrderStatus.IN_PROGRSS){
-			this.status = OrderStatus.CANCELED;
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean changeOrderDeletePizza(Integer... pizzasID){
-		if(this.getOrderStatus() == OrderStatus.NEW 
-				|| this.getOrderStatus() == OrderStatus.CANCELED){
-			
+
+	public boolean changeOrderDeletePizza(Integer... pizzasID) {
+		if (this.getOrderStatus() == OrderStatus.NEW ) {
+
 			Pizza[] pizzasToSort = (Pizza[]) pizzas.toArray();
-			Arrays.sort(pizzasToSort, new Comparator<Pizza>(){
-				public int compare(Pizza z1, Pizza z2){
+			Arrays.sort(pizzasToSort, new Comparator<Pizza>() {
+				public int compare(Pizza z1, Pizza z2) {
 					return z1.getId() - z2.getId();
 				}
 			});
-			
-			for(Integer toDelete: pizzasID){
+
+			for (Integer toDelete : pizzasID) {
 				int del = Arrays.binarySearch(pizzasToSort, toDelete);
 				pizzasToSort[del] = null;
 			}
-			
+
 			List<Pizza> newPizzas = new ArrayList<>();
-			for(Pizza pizzaToSet : pizzasToSort){
-				newPizzas.add(pizzaToSet);
+			for (Pizza pizzaToSet : pizzasToSort) {
+				if(pizzasToSort != null){
+					newPizzas.add(pizzaToSet);
+				}
 			}
 			pizzas = newPizzas;
-			changeOrder = true;
-			changeOrderForDiscount = true;
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean addPizzas(List<Pizza> additionalPizzas){
-		if(this.pizzas.size() + additionalPizzas.size() <= 10){
+
+	public boolean addPizzas(List<Pizza> additionalPizzas) {
+		if (this.pizzas.size() + additionalPizzas.size() <= 10) {
 			this.pizzas.addAll(additionalPizzas);
-			changeOrder = true;
-			changeOrderForDiscount = true;
 			return true;
 		}
 		return false;
 	}
-	
+
 	public OrderStatus getOrderStatus() {
-		return status;
+		return orderStatus;
 	}
-	
-	public void addDiscount(Discount discount){
-		discounts.add(discount);
+
+	public void setOrderPrice(double orderPrice) {
+		this.orderPrice = orderPrice;
 	}
-	
-	public double getCountOrderPriceWithDiscount(){
-		return orderPriceWithDiscount;
-	}
-	
-	public double countOrderPriceWithDiscount(){
-		
-		if(changeOrderForDiscount){
-			orderPriceWithDiscount = getOrderPrice();
-			for(Discount discount: discounts){
-				orderPriceWithDiscount -= discount.countDiscount(this);
-			}
-			changeOrderForDiscount = false;
-		}
-		return orderPriceWithDiscount;
-	}
-	
-	public double getOrderPrice(){
+
+	public double getOrderPrice() {
 		return countOrderPrice();
 	}
-	
-	public double countOrderPrice(){
 
-		if(changeOrder){
-			for(Pizza pizza : pizzas){
-				orderPrice += pizza.getPrice();
-			}
-			changeOrder = false;
+	public double countOrderPrice() {
+		for (Pizza pizza : pizzas) {
+			orderPrice += pizza.getPrice();
 		}
 		return orderPrice;
 	}
-	
+
 	public void setOrderStatus(OrderStatus status) {
-		this.status = status;
+		this.orderStatus = status;
 	}
-
-
 
 	public Long getId() {
 		return id;
 	}
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
+
+	// public void setId(Long id) {
+	// this.id = id;
+	// }
 	public Customer getCustomer() {
 		return customer;
 	}
+
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+
 	public List<Pizza> getPizzas() {
 		return pizzas;
 	}
+
 	public void setPizzas(List<Pizza> pizzas) {
 		this.pizzas = pizzas;
 	}
+
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", customer=" + customer + ", pizzas=" + pizzas + "]";
