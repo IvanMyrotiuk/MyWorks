@@ -14,6 +14,7 @@ public class BeanBuilder {
 	private final Class<?> clazz;
 	private ApplicationContext applicationContext;
 	private Object bean;
+	private Object proxy;
 
 	public BeanBuilder(Class<?> clazz, ApplicationContext applicationContext) {
 		this.clazz = clazz;
@@ -68,16 +69,20 @@ public class BeanBuilder {
 	}
 
 	public void createBeanProxy() {
-		bean = MyTimeProxy.getProxyInstance(bean);
+		Method[] methods = clazz.getMethods();
+		for(Method m: methods){
+			if(m.getAnnotation(BanchMark.class) != null){
+				proxy = MyTimeProxy.getProxyInstance(bean);
+				break;
+			}
+		}
 	}
 	
 	public void callPostConstructMethod() throws Exception {
 		Method[] methods = clazz.getMethods();
 		for(Method m : methods){
 			if(m.getAnnotation(PostConstruct.class) != null){
-				InvocationHandler ih = Proxy.getInvocationHandler(bean);
-				Object original = ((MyTimeProxy)ih).getUnwrappedInvocationHandler();
-				m.invoke(original);
+				m.invoke(bean);
 			}
 		}
 	}
@@ -86,14 +91,18 @@ public class BeanBuilder {
 		Method[] methods = clazz.getMethods();
 		for(Method m: methods){
 			if(m.getName().equals("init")){
-				InvocationHandler ih = Proxy.getInvocationHandler(bean);
-				Object original = ((MyTimeProxy)ih).getUnwrappedInvocationHandler();
-				m.invoke(original);
+//				InvocationHandler ih = Proxy.getInvocationHandler(bean);
+//				Object original = ((MyTimeProxy)ih).getUnwrappedInvocationHandler();
+				m.invoke(bean);
 			}
 		}
 	}
 
 	public Object build() {
-		return bean;
+		if(proxy != null){
+			return proxy;
+		}else{
+			return bean;
+		}
 	}
 }
