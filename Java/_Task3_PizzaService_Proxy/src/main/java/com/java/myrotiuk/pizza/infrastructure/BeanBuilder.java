@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Optional;
 
 import com.java.myrotiuk.pizza.repository.PizzaRepository;
 import com.java.myrotiuk.pizza.repository.inmempizza.InMemPizzaRepository;
@@ -14,7 +15,7 @@ public class BeanBuilder {
 	private final Class<?> clazz;
 	private ApplicationContext applicationContext;
 	private Object bean;
-	private Object proxy;
+	private Optional<Object> proxy = Optional.empty();
 
 	public BeanBuilder(Class<?> clazz, ApplicationContext applicationContext) {
 		this.clazz = clazz;
@@ -70,38 +71,42 @@ public class BeanBuilder {
 
 	public void createBeanProxy() {
 		Method[] methods = clazz.getMethods();
-		for(Method m: methods){
-			if(m.getAnnotation(BanchMark.class) != null){
-				proxy = MyTimeProxy.getProxyInstance(bean);
+		for (Method m : methods) {
+			if (m.getAnnotation(BanchMark.class) != null) {
+				proxy = Optional.of( MyTimeProxy.getProxyInstance(bean));
 				break;
 			}
 		}
 	}
-	
+
 	public void callPostConstructMethod() throws Exception {
 		Method[] methods = clazz.getMethods();
-		for(Method m : methods){
-			if(m.getAnnotation(PostConstruct.class) != null){
-				m.invoke(bean);
+		for (Method m : methods) {
+			if (m.getAnnotation(PostConstruct.class) != null) {
+					m.invoke(bean);
 			}
 		}
 	}
 
-	public void callInitMethod() throws Exception{
+	public void callInitMethod() throws Exception {
 		Method[] methods = clazz.getMethods();
-		for(Method m: methods){
-			if(m.getName().equals("init")){
-//				InvocationHandler ih = Proxy.getInvocationHandler(bean);
-//				Object original = ((MyTimeProxy)ih).getUnwrappedInvocationHandler();
-				m.invoke(bean);
+		for (Method m : methods) {
+			if (m.getName().equals("init")) {
+//				if (proxy.isPresent()) {
+//					InvocationHandler ih = Proxy.getInvocationHandler(proxy.get());
+//					Object original = ((MyTimeProxy) ih).getUnwrappedInvocationHandler();
+//					m.invoke(original);
+				//} else {
+					m.invoke(bean);
+				//}
 			}
 		}
 	}
 
 	public Object build() {
-		if(proxy != null){
-			return proxy;
-		}else{
+		if (proxy.isPresent()) {
+			return proxy.get();
+		} else {
 			return bean;
 		}
 	}
