@@ -31,7 +31,6 @@ public class InMemAccruedCardRepository implements AccruedCardRepository{
 
 	@Override
 	public AccruedCard getAccruedCardByCustomer(Customer customer) {
-		
 		AccruedCard accCard = null;
 		
 		for(AccruedCard card: cards){

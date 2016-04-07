@@ -26,5 +26,4 @@ public class DiscountProvider {
 		discounts.add(new DiscountFromAccruedCard(accCard, order.getOrderPrice()));
 		return discounts;
 	}
-	
 }
