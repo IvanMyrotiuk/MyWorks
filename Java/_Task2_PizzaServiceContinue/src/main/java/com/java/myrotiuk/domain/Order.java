@@ -80,21 +80,26 @@ public class Order {
 	public boolean changeOrderDeletePizza(Integer... pizzasID) {
 		if (this.getOrderStatus() == OrderStatus.NEW ) {
 
-			Pizza[] pizzasToSort = (Pizza[]) pizzas.toArray();
+			Pizza[] pizzasToSort = pizzas.toArray(new Pizza[pizzas.size()]);
 			Arrays.sort(pizzasToSort, new Comparator<Pizza>() {
 				public int compare(Pizza z1, Pizza z2) {
 					return z1.getId() - z2.getId();
 				}
 			});
+//			System.out.println(Arrays.asList(pizzasToSort));
 
 			for (Integer toDelete : pizzasID) {
-				int del = Arrays.binarySearch(pizzasToSort, toDelete);
+				int del = Arrays.binarySearch(pizzasToSort, pizzasToSort[toDelete - 1], new Comparator<Pizza>() {
+					public int compare(Pizza z1, Pizza z2) {
+						return z1.getId() - z2.getId();
+					}
+				});
 				pizzasToSort[del] = null;
 			}
 
 			List<Pizza> newPizzas = new ArrayList<>();
 			for (Pizza pizzaToSet : pizzasToSort) {
-				if(pizzasToSort != null){
+				if(pizzaToSet != null){
 					newPizzas.add(pizzaToSet);
 				}
 			}

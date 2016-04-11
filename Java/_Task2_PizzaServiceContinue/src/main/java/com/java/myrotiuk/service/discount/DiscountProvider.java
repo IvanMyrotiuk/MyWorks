@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Order;
 import com.java.myrotiuk.domain.Pizza;
@@ -12,10 +15,12 @@ import com.java.myrotiuk.domain.discount.DiscountForMoreThen4Pizzas;
 import com.java.myrotiuk.domain.discount.DiscountFromAccruedCard;
 import com.java.myrotiuk.service.card.AccruedCardService;
 
+@Service("discountProvider")
 public class DiscountProvider {
 	
 	private AccruedCardService cardService;
 	
+	@Autowired
 	public DiscountProvider(AccruedCardService cardService){
 		this.cardService = cardService;
 	}

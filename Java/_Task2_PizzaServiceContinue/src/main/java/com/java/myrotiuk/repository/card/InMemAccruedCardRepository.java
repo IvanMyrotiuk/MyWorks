@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Customer;
 
+@Repository("cardRepository")
 public class InMemAccruedCardRepository implements AccruedCardRepository{
 
 	private List<AccruedCard> cards = new ArrayList<>();

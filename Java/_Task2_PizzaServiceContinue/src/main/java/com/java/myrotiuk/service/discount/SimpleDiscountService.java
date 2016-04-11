@@ -1,13 +1,19 @@
 package com.java.myrotiuk.service.discount;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.java.myrotiuk.domain.Order;
 import com.java.myrotiuk.domain.discount.Discount;
 
+@Service("discountService")
 public class SimpleDiscountService implements DiscountService {
 
 	private DiscountProvider discountProvider;
 	
+	@Autowired
 	public SimpleDiscountService(DiscountProvider discountProvider) {
 		this.discountProvider = discountProvider;
 	}

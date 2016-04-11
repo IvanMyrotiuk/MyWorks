@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
@@ -21,20 +24,23 @@ import com.java.myrotiuk.service.discount.DiscountProvider;
 import com.java.myrotiuk.service.discount.DiscountService;
 import com.java.myrotiuk.service.discount.SimpleDiscountService;
 
+@Service("orderService")
 public class SimpleOrderService implements OrderService {
 
-	private PizzaRepository pizzaRepository = new InMemPizzaRepository();
-	private OrderRepository orderRepository = new InMemOrderRepository();
-	private AccruedCardService cardService = new SimpleAccruedCardService(new InMemAccruedCardRepository());
-	private DiscountService discountService = new SimpleDiscountService(new DiscountProvider(cardService));
+	private PizzaRepository pizzaRepository; //= new InMemPizzaRepository();
+	private OrderRepository orderRepository; //= new InMemOrderRepository();
+	private AccruedCardService cardService; //= new SimpleAccruedCardService(new InMemAccruedCardRepository());
+	private DiscountService discountService; //= new SimpleDiscountService(new DiscountProvider(cardService));
 	
 
-//	public SimpleOrderService(PizzaRepository pizzaRepository, OrderRepository orderRepository,
-//			AccruedCardService cardService) {
-//		this.pizzaRepository = pizzaRepository;
-//		this.orderRepository = orderRepository;
-//		this.cardService = cardService;
-//	}
+	@Autowired
+	public SimpleOrderService(PizzaRepository pizzaRepository, OrderRepository orderRepository,
+			AccruedCardService cardService, DiscountService discountService) {
+		this.pizzaRepository = pizzaRepository;
+		this.orderRepository = orderRepository;
+		this.cardService = cardService;
+		this.discountService = discountService;
+	}
 
 	public Order placeNewOrder(Customer customer, Integer... pizzasID) {
 

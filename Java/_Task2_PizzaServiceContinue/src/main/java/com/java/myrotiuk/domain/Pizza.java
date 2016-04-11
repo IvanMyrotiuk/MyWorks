@@ -12,12 +12,14 @@ public class Pizza {
 		VEGETERIAN, SEA, MEAT
 	}
 
-	// public Pizza(int id, String name, double price, Type type) {
-	// this.id = id;
-	// this.name = name;
-	// this.price = price;
-	// this.type = type;
-	// }
+	 public Pizza(int id, String name, double price, Type type) {
+	 this.id = id;
+	 this.name = name;
+	 this.price = price;
+	 this.type = type;
+	 currentId = id;
+	 currentId++;
+	 }
 
 	public Pizza(String name, double price, Type type) {
 		this.name = name;
