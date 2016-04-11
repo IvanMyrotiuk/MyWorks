@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- <import resource="repositoryContext.xml"/>  -->
+
+	<bean name="orderService" class="com.java.myrotiuk.pizza.service.SimpleOrderService">
+		<constructor-arg ref="orderRepository"/>
+		<constructor-arg ref="pizzaRepository"/>
+	</bean>
+	
+	<!-- 2 <bean id = "createPizzaBean" class="com.java.myrotiuk.pizza.service.CreatePizzaService"/> -->
+	<!-- <bean factory-bean="createPizzaBean" factory-method="createPizza">
+		<constructor-arg index="0"><null/></constructor-arg>
+		<constructor-arg index="1" value="Some name"/>
+		<constructor-arg index="2"><null/></constructor-arg>
+		<constructor-arg index="3"><value>SEA</value></constructor-arg> 
+	</bean> -->
+	
+	<bean id = "createPizzaBean" class="com.java.myrotiuk.pizza.service.CreatePizzaService"/>
+	
+	
+	
+	<bean factory-bean="createPizzaBean" factory-method="createPizza">
+		<constructor-arg index="0"><null/></constructor-arg>
+		<constructor-arg index="1" value="Some name"/>
+<!--    <ref bean=""/>
+		<ref parent=""/> --> 
+		<constructor-arg index="2"><null/></constructor-arg>
+		<constructor-arg index="3"><value>SEA</value></constructor-arg> 
+	</bean>
+	
+	<bean id="customer" class="com.java.myrotiuk.pizza.domain.Customer">
+		<constructor-arg value="1"/>
+		<constructor-arg value="Abc"/>
+	</bean>
+	
+	
+	
+</beans>

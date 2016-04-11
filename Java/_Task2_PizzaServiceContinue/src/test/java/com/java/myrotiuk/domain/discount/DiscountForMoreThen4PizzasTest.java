@@ -26,8 +26,8 @@ public class DiscountForMoreThen4PizzasTest {
 		pizzas.add(new Pizza("Good day", 100, Type.SEA));
 		pizzas.add(new Pizza("Blue sky", 200, Type.MEAT));
 		pizzas.add(new Pizza("Woterfall", 255, Type.VEGETERIAN));
-		pizzas.add(new Pizza("Woterfall", 250, Type.VEGETERIAN));
 		pizzas.add(new Pizza("Woterfall", 300, Type.VEGETERIAN));
+		pizzas.add(new Pizza("Woterfall", 250, Type.VEGETERIAN));
 		
 		discountFor4Pizzas = new DiscountForMoreThen4Pizzas(pizzas);
 	}
@@ -35,12 +35,29 @@ public class DiscountForMoreThen4PizzasTest {
 	@Test
 	public void shouldReturn30PercentFromHighestPriceIfNumOfPizzasMoreThen4() {
 		double result = discountFor4Pizzas.countDiscount();
-		assertEquals(new Double(90.0), new Double(result));
+		assertEquals(90.0, result, 0);
 	}
 	
 	@Test
-	public void shouldReturnTrueAsMoreThan4Pizzas(){
+	public void shouldReturnTrueWhenMoreThan4Pizzas(){
 		assertTrue(discountFor4Pizzas.isApplicable());
+	}
+	
+	@Test
+	public void shouldReturnFalseWhenLessThan4Pizzas(){
+		List<Pizza> pizzas = new ArrayList<>();
+		
+		pizzas.add(new Pizza("Good day", 100, Type.SEA));
+		pizzas.add(new Pizza("Blue sky", 200, Type.MEAT));
+		pizzas.add(new Pizza("Woterfall", 255, Type.VEGETERIAN));
+		
+		discountFor4Pizzas = new DiscountForMoreThen4Pizzas(pizzas);
+		assertFalse(discountFor4Pizzas.isApplicable());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowIllegalArgumentExceptionIfListOfPizzasIsNull(){
+		new DiscountForMoreThen4Pizzas(null);
 	}
 
 }

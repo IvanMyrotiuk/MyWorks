@@ -13,6 +13,9 @@ public class DiscountForMoreThen4Pizzas implements Discount {
 	private List<Pizza> pizzas;
 	
 	public DiscountForMoreThen4Pizzas(List<Pizza> pizzas){
+		if(pizzas == null){
+			throw new IllegalArgumentException();
+		}
 		this.pizzas = pizzas;
 	}
 	

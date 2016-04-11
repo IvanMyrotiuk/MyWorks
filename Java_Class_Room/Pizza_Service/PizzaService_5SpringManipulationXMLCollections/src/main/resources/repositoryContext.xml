@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean name="pizzaRepository"
+		class="com.java.myrotiuk.pizza.repository.inmempizza.InMemPizzaRepository"
+		init-method="cookPizzas">
+		<property name="pizzas">
+			<list>
+				<bean class="com.java.myrotiuk.pizza.domain.Pizza">
+					<constructor-arg index="0" value="1" />
+					<constructor-arg index="1" value="Pizza 1" />
+					<constructor-arg index="2" value="2.4" />
+					<constructor-arg index="3" value="SEA" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="orderRepository"
+		class="com.java.myrotiuk.pizza.repository.inmemorder.InMemOrderRepository" />
+
+	<bean id="customer" class="com.java.myrotiuk.pizza.domain.Customer">
+		<constructor-arg value="2" />
+		<constructor-arg value="Ecd" />
+	</bean>
+
+	<!-- 2 <bean factory-bean="createPizzaBean" factory-method="createPizza"> 
+		<constructor-arg index="0"><null/></constructor-arg> <constructor-arg index="1" 
+		value="Some name"/> <constructor-arg index="2"><null/></constructor-arg> 
+		<constructor-arg index="3"><value>SEA</value></constructor-arg> </bean> -->
+	<bean id="createPizzaBean" class="com.java.myrotiuk.pizza.service.CreatePizzaService" />
+
+
+
+</beans>

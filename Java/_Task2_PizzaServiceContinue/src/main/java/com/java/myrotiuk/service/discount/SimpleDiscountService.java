@@ -21,6 +21,10 @@ public class SimpleDiscountService implements DiscountService {
 				resultDiscount += discount.countDiscount();
 			}
 		}
+//		if(discounts.size()>0){
+//		Discount discount =discounts.get(0);
+//		if(discount.isApplicable()) resultDiscount+=discount.countDiscount();
+//		}//special for failing test
 		return resultDiscount;
 	}
 

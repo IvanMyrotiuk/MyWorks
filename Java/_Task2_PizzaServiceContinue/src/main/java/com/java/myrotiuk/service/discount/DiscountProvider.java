@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Order;
+import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.domain.discount.Discount;
 import com.java.myrotiuk.domain.discount.DiscountForMoreThen4Pizzas;
 import com.java.myrotiuk.domain.discount.DiscountFromAccruedCard;
@@ -22,8 +23,17 @@ public class DiscountProvider {
 	public List<Discount> provideDiscounts(Order order){
 		Optional<AccruedCard> accCard = cardService.findCardByCustomer(order.getCustomer());
 		List<Discount> discounts = new ArrayList<>();
-		discounts.add(new DiscountForMoreThen4Pizzas(order.getPizzas()));
-		discounts.add(new DiscountFromAccruedCard(accCard, order.getOrderPrice()));
+		discounts.add(createDiscountForMoreThen4Pizzas(order.getPizzas()));
+		discounts.add(createDiscountFromAccruedCard(order.getOrderPrice(), accCard));
 		return discounts;
 	}
+
+	DiscountFromAccruedCard createDiscountFromAccruedCard(double orderPrice, Optional<AccruedCard> accCard) {
+		return new DiscountFromAccruedCard(accCard, orderPrice);
+	}
+
+	DiscountForMoreThen4Pizzas createDiscountForMoreThen4Pizzas(List<Pizza> pizzas) {
+		return new DiscountForMoreThen4Pizzas(pizzas);
+	}
+	
 }
