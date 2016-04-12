@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
 
 import com.java.myrotiuk.domain.AccruedCard;
@@ -50,7 +51,9 @@ public class SimpleOrderService implements OrderService {
 			awardCard(customer);
 			
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
-			Order newOrder = createOrder(customer, pizzas);
+			Order newOrder = createOrder();//createOrder(customer, pizzas);
+			newOrder.setCustomer(customer);
+			newOrder.setPizzas(pizzas);
 
 			orderRepository.saveOrder(newOrder); // set Order Id and save Order
 													// to in-memory list
@@ -137,10 +140,15 @@ public class SimpleOrderService implements OrderService {
 		return false;
 	}
 
-	private Order createOrder(Customer customer, List<Pizza> pizzas) {
-
-		Order newOrder = new Order(customer, pizzas);
-		return newOrder;
+//	private Order createOrder(Customer customer, List<Pizza> pizzas) {
+//
+//		Order newOrder = new Order(customer, pizzas);
+//		return newOrder;
+//	}
+	
+	@Lookup
+	protected Order createOrder() {
+		return null;
 	}
 
 	private List<Pizza> pizzasByArrOfId(Integer... pizzasID) {

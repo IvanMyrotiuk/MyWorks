@@ -5,8 +5,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.java.myrotiuk.exception.StatusOrderException;
 
+@Component
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Order {
 	private Long id;
 	private Customer customer;
@@ -14,6 +20,11 @@ public class Order {
 	private static long currentId;
 	private double orderPrice;
 	private OrderStatus orderStatus;
+	
+	public Order() {
+		this.orderStatus = OrderStatus.NEW;
+		this.id = ++currentId;
+	}
 	
 	public Order(Customer customer, List<Pizza> pizzas) {
 		this.customer = customer;

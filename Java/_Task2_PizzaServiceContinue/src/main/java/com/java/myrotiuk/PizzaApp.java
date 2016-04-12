@@ -18,12 +18,17 @@ public class PizzaApp {
 		Customer customer = new Customer("John", new Address("Beverly Hills", "7777-777-77"));
 		Order order;
 		
-		ConfigurableApplicationContext appContext = new ClassPathXmlApplicationContext("appContext.xml");
+		ConfigurableApplicationContext repositoryContext = new ClassPathXmlApplicationContext("repositoryContext.xml");
+		
+		ConfigurableApplicationContext appContext = new ClassPathXmlApplicationContext(new String[]{"appContext.xml"}, false);
+		
+		appContext.setParent(repositoryContext);
+		appContext.refresh();
 		
 		OrderService orderService = appContext.getBean(OrderService.class);//= new SimpleOrderService();
 		order = orderService.placeNewOrder(customer, 1, 2, 3);
 		System.out.println(order);
-		
+		System.out.println(orderService.getClass().getName());
 		appContext.close();
 		
 	}
