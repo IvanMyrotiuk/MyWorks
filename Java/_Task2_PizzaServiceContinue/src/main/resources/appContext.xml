@@ -7,8 +7,12 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:component-scan base-package="com.java.myrotiuk"/>
-	
+	<context:component-scan base-package="com.java.myrotiuk">
+		<!-- <context:include-filter type="annotation" expression="com.java.myrotiuk.infrustruction.Domain"/> -->
+		<context:include-filter type="assignable" expression="com.java.myrotiuk.domain.Order"/>
+	</context:component-scan>
+
+	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor"/>
 	<!-- <import resource="repositoryContext.xml"/>
 	
 	<bean id="cardService" class="com.java.myrotiuk.service.card.SimpleAccruedCardService">

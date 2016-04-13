@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.java.myrotiuk.exception.StatusOrderException;
+import com.java.myrotiuk.infrustructure.Domain;
 
-@Component
+//@Component
+@Domain
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Order {
 	private Long id;

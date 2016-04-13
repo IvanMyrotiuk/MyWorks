@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	
+	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor"/>
 	<!-- <bean id="pizzaRepository" class="com.java.myrotiuk.repository.pizza.InMemPizzaRepository"/>
 	<bean id="orderRepository" class="com.java.myrotiuk.repository.order.InMemOrderRepository"/>
 	<bean id="cardRepository" class="com.java.myrotiuk.repository.card.InMemAccruedCardRepository"/> -->

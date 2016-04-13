@@ -1,6 +1,7 @@
 package com.java.myrotiuk;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,6 +16,7 @@ import com.java.myrotiuk.service.order.SimpleOrderService;
 public class PizzaApp {
 
 	public static void main(String[] args) {
+
 		Customer customer = new Customer("John", new Address("Beverly Hills", "7777-777-77"));
 		Order order;
 		
@@ -25,7 +27,7 @@ public class PizzaApp {
 		appContext.setParent(repositoryContext);
 		appContext.refresh();
 		
-		OrderService orderService = appContext.getBean(OrderService.class);//= new SimpleOrderService();
+		OrderService orderService = (OrderService) appContext.getBean(OrderService.class);//"simpleOrderService");//= new SimpleOrderService();
 		order = orderService.placeNewOrder(customer, 1, 2, 3);
 		System.out.println(order);
 		System.out.println(orderService.getClass().getName());

@@ -14,6 +14,7 @@ import com.java.myrotiuk.domain.Order;
 import com.java.myrotiuk.domain.Order.OrderStatus;
 import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.exception.WrongIdOfOrderException;
+import com.java.myrotiuk.infrustructure.BenchMark;
 import com.java.myrotiuk.repository.card.InMemAccruedCardRepository;
 import com.java.myrotiuk.repository.order.InMemOrderRepository;
 import com.java.myrotiuk.repository.order.OrderRepository;
@@ -25,7 +26,7 @@ import com.java.myrotiuk.service.discount.DiscountProvider;
 import com.java.myrotiuk.service.discount.DiscountService;
 import com.java.myrotiuk.service.discount.SimpleDiscountService;
 
-@Service("orderService")
+@Service//("orderService")
 public class SimpleOrderService implements OrderService {
 
 	private PizzaRepository pizzaRepository; //= new InMemPizzaRepository();
@@ -43,6 +44,7 @@ public class SimpleOrderService implements OrderService {
 		this.discountService = discountService;
 	}
 
+	@BenchMark
 	public Order placeNewOrder(Customer customer, Integer... pizzasID) {
 
 		int countPizzas = pizzasID.length;
@@ -51,7 +53,8 @@ public class SimpleOrderService implements OrderService {
 			awardCard(customer);
 			
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
-			Order newOrder = createOrder();//createOrder(customer, pizzas);
+			//Order newOrder = createOrder(customer, pizzas);
+			Order newOrder = createOrder();
 			newOrder.setCustomer(customer);
 			newOrder.setPizzas(pizzas);
 
