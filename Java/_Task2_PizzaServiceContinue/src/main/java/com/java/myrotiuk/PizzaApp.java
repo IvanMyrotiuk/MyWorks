@@ -32,7 +32,6 @@ public class PizzaApp {
 		System.out.println(order);
 		System.out.println(orderService.getClass().getName());
 		appContext.close();
-		
 	}
 
 }

@@ -6,7 +6,6 @@ import java.lang.reflect.Proxy;
 
 import org.springframework.cglib.proxy.Enhancer;
 
-
 public class MyTimeProxy implements InvocationHandler {
 
 	private Object object;
@@ -21,6 +20,7 @@ public class MyTimeProxy implements InvocationHandler {
 	
 	public static Object getProxyInstance(Object object){
 		Class<?> objectClass = object.getClass();
+		//ClassUtils.isCglibProxy(bean);
 		if(Enhancer.isEnhanced(objectClass)){
 			return Proxy.newProxyInstance(object.getClass().getClassLoader(), 
 					objectClass.getSuperclass().getInterfaces(), new MyTimeProxy(object));

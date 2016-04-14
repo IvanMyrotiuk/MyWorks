@@ -13,6 +13,7 @@ import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
 import com.java.myrotiuk.domain.Order.OrderStatus;
 import com.java.myrotiuk.domain.Pizza;
+import com.java.myrotiuk.exception.StatusOrderException;
 import com.java.myrotiuk.exception.WrongIdOfOrderException;
 import com.java.myrotiuk.infrustructure.BenchMark;
 import com.java.myrotiuk.repository.card.InMemAccruedCardRepository;
@@ -26,14 +27,16 @@ import com.java.myrotiuk.service.discount.DiscountProvider;
 import com.java.myrotiuk.service.discount.DiscountService;
 import com.java.myrotiuk.service.discount.SimpleDiscountService;
 
-@Service//("orderService")
+@Service // ("orderService")
 public class SimpleOrderService implements OrderService {
 
-	private PizzaRepository pizzaRepository; //= new InMemPizzaRepository();
-	private OrderRepository orderRepository; //= new InMemOrderRepository();
-	private AccruedCardService cardService; //= new SimpleAccruedCardService(new InMemAccruedCardRepository());
-	private DiscountService discountService; //= new SimpleDiscountService(new DiscountProvider(cardService));
-	
+	private PizzaRepository pizzaRepository; // = new InMemPizzaRepository();
+	private OrderRepository orderRepository; // = new InMemOrderRepository();
+	private AccruedCardService cardService; // = new
+											// SimpleAccruedCardService(new
+											// InMemAccruedCardRepository());
+	private DiscountService discountService; // = new SimpleDiscountService(new
+												// DiscountProvider(cardService));
 
 	@Autowired
 	public SimpleOrderService(PizzaRepository pizzaRepository, OrderRepository orderRepository,
@@ -49,11 +52,11 @@ public class SimpleOrderService implements OrderService {
 
 		int countPizzas = pizzasID.length;
 		if (countPizzas > 0 && countPizzas <= 10) {
-			
+
 			awardCard(customer);
-			
+
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
-			//Order newOrder = createOrder(customer, pizzas);
+			// Order newOrder = createOrder(customer, pizzas);
 			Order newOrder = createOrder();
 			newOrder.setCustomer(customer);
 			newOrder.setPizzas(pizzas);
@@ -65,57 +68,69 @@ public class SimpleOrderService implements OrderService {
 			throw new IllegalArgumentException("Inapropriate amount of pizzas");
 		}
 	}
-	
-	public int awardCard(Customer customer){
+
+	public int awardCard(Customer customer) {
 		Optional<AccruedCard> card = cardService.findCardByCustomer(customer);
-		if(!card.isPresent()){
+		if (!card.isPresent()) {
 			return cardService.giveCardToCustomer(customer);
 		}
 		return card.get().getId();
 	}
 
-	public Order processOrder(long orderId){
+	public Order processOrder(long orderId) {
 		Optional<Order> order = orderRepository.getOrder(orderId);
-		if(order.isPresent()){
-			Order processedOrder = order.get().next();
-			orderRepository.updateOrder(processedOrder);
-			return processedOrder;
+		if (order.isPresent()) {
+			Order processedOrder = order.get();
+			if (processedOrder.getOrderStatus() == OrderStatus.NEW) {
+				processedOrder.next();
+				orderRepository.updateOrder(processedOrder);
+				return processedOrder;
+			} else {
+				throw new StatusOrderException("You can not switch" + processedOrder.getOrderStatus() + " status to "
+						+ OrderStatus.IN_PROGRESS);
+			}
 		}
 		throw new WrongIdOfOrderException("There is no such order");
 	}
-	
-	public Order completeOrder(long orderId){
+
+	public Order completeOrder(long orderId) {
 		Optional<Order> order = orderRepository.getOrder(orderId);
-		if(order.isPresent()){
+		if (order.isPresent()) {
 			Order orderToComplete = order.get();
-			Order completedOrder = orderToComplete.next();
-			//DiscountService discountService = new SimpleDiscountService();
-			double priceAfterDiscount =completedOrder.getOrderPrice() - discountService.getDiscount(completedOrder);
-			Optional<AccruedCard> optionalAccruedCard = cardService.findCardByCustomer(completedOrder.getCustomer());
-			if(optionalAccruedCard.isPresent()){
-				AccruedCard accruedCard = optionalAccruedCard.get();
-				accruedCard.setAmount(accruedCard.getAmount()+priceAfterDiscount);
-				cardService.updateCard(accruedCard);
+			if (orderToComplete.getOrderStatus() == OrderStatus.IN_PROGRESS) {
+				Order completedOrder = orderToComplete.next();
+				double priceAfterDiscount = completedOrder.getOrderPrice()- discountService.getDiscount(completedOrder);
+				completedOrder.setOrderPrice(priceAfterDiscount);
+				Optional<AccruedCard> optionalAccruedCard = cardService
+						.findCardByCustomer(completedOrder.getCustomer());
+				if (optionalAccruedCard.isPresent()) {
+					AccruedCard accruedCard = optionalAccruedCard.get();
+					accruedCard.setAmount(accruedCard.getAmount() + priceAfterDiscount);
+					cardService.updateCard(accruedCard);
+				}
+				orderRepository.updateOrder(completedOrder);
+				return completedOrder;
+			} else {
+				throw new StatusOrderException(
+						"You can not switch" + orderToComplete.getOrderStatus() + " status to " + OrderStatus.DONE);
 			}
-			orderRepository.updateOrder(completedOrder);
-			return completedOrder;
-		}else{
+		} else {
 			throw new WrongIdOfOrderException("There is no such order");
 		}
 	}
-	
-	public Order cancelOrder(long orderId){
+
+	public Order cancelOrder(long orderId) {
 		Optional<Order> order = orderRepository.getOrder(orderId);
-		if(order.isPresent()){
+		if (order.isPresent()) {
 			Order orderToCancel = order.get();
 			Order canceledOrder = orderToCancel.cancel();
 			orderRepository.updateOrder(canceledOrder);
 			return canceledOrder;
-		}else{
+		} else {
 			throw new WrongIdOfOrderException("There is no such order");
 		}
 	}
-	
+
 	public boolean addPizzaToOrder(int orderId, Integer... pizzasID) {
 
 		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
@@ -133,7 +148,7 @@ public class SimpleOrderService implements OrderService {
 		}
 		return false;
 	}
-	
+
 	public boolean changeOrderDeletePizza(int orderId, Integer... pizzasID) {
 		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
 		if (currentOrder.isPresent()) {
@@ -143,12 +158,12 @@ public class SimpleOrderService implements OrderService {
 		return false;
 	}
 
-//	private Order createOrder(Customer customer, List<Pizza> pizzas) {
-//
-//		Order newOrder = new Order(customer, pizzas);
-//		return newOrder;
-//	}
-	
+	// private Order createOrder(Customer customer, List<Pizza> pizzas) {
+	//
+	// Order newOrder = new Order(customer, pizzas);
+	// return newOrder;
+	// }
+
 	@Lookup
 	protected Order createOrder() {
 		return null;

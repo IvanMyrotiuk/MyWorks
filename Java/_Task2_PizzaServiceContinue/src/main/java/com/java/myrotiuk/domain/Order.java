@@ -139,7 +139,8 @@ public class Order {
 	}
 
 	public double getOrderPrice() {
-		return countOrderPrice();
+		return orderPrice;
+		//return countOrderPrice();
 	}
 
 	public double countOrderPrice() {

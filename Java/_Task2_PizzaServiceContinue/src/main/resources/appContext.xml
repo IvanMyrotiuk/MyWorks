@@ -7,13 +7,17 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:component-scan base-package="com.java.myrotiuk">
-		<!-- <context:include-filter type="annotation" expression="com.java.myrotiuk.infrustruction.Domain"/> -->
-		<context:include-filter type="assignable" expression="com.java.myrotiuk.domain.Order"/>
+	<context:component-scan base-package="com.java.myrotiuk.domain">
+		<context:include-filter type="annotation" expression="com.java.myrotiuk.infrustructure.Domain"/>
+		<!-- <context:include-filter type="assignable" expression="com.java.myrotiuk.domain.Order"/> -->
 	</context:component-scan>
+	
+	<context:component-scan base-package="com.java.myrotiuk.service"/>
 
 	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor"/>
-	<!-- <import resource="repositoryContext.xml"/>
+	
+	<!--
+	 <import resource="repositoryContext.xml"/>
 	
 	<bean id="cardService" class="com.java.myrotiuk.service.card.SimpleAccruedCardService">
 		<constructor-arg ref="cardRepository"/>
@@ -29,4 +33,5 @@
 	
 	<bean id="orderService" class="com.java.myrotiuk.service.order.SimpleOrderService" autowire="constructor"/>
  -->
+ 
 </beans>

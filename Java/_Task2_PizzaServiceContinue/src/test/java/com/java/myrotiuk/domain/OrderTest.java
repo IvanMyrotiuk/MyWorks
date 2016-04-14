@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.java.myrotiuk.domain.Order.OrderStatus;
 import com.java.myrotiuk.domain.Pizza.Type;
+import com.java.myrotiuk.exception.StatusOrderException;
 
 public class OrderTest {
 
@@ -54,6 +55,50 @@ public class OrderTest {
 	}
 	
 	@Test
+	public void shouldReturnTrueIfOrderStatusDone(){
+		Order order = new Order();
+		order.setOrderStatus(OrderStatus.IN_PROGRESS);
+		order.next();
+		assertEquals(OrderStatus.DONE, order.getOrderStatus());
+	}
+	
+	@Test(expected = StatusOrderException.class)
+	public void shouldTrowAnExceptionIfOrderStatusInProgressAndWeWantToSwitchToCancel(){
+		Order order = new Order();
+		order.setOrderStatus(OrderStatus.IN_PROGRESS);
+		order.cancel();
+	}
+	
+	@Test(expected = StatusOrderException.class)
+	public void shouldTrowAnExceptionIfOrderStatusInCancelAndWeWantToSwitchToSomethingElse(){
+		Order order = new Order();
+		order.setOrderStatus(OrderStatus.CANCELED);
+		order.next();
+	}
+	
+	@Test
+	public void shouldReturnTrueIfOrderStatusCancel(){
+		Order order = new Order();
+		order.setOrderStatus(OrderStatus.CANCELED);
+		order.cancel();
+		assertEquals(OrderStatus.CANCELED, order.getOrderStatus());
+	}
+	
+	@Test(expected = StatusOrderException.class)
+	public void shouldTrowAnExceptionIfOrderStatusInDoneAndWeWantToSwitchToSomethingElse(){
+		Order order = new Order();
+		order.setOrderStatus(OrderStatus.DONE);
+		order.next();
+	}
+	
+	@Test(expected = StatusOrderException.class)
+	public void shouldTrowAnExceptionIfOrderStatusInDoneAndWeWantToSwitchToCanceled(){
+		Order order = new Order();
+		order.setOrderStatus(OrderStatus.DONE);
+		order.cancel();
+	}
+	
+	@Test
 	public void shouldReturnFalseForChangingOrderDeletingPizzaAsStatusInProggress(){
 		List<Pizza> pizzas = mock(List.class);
 		this.order = new Order(customer, pizzas);
@@ -75,11 +120,9 @@ public class OrderTest {
 	
 	@Test
 	public void shouldReturnTrueWhenDeleted2and3Pizzas(){
-
 		boolean result = order.changeOrderDeletePizza(2,3);
 		
 		assertTrue(result);
-		
 	}
 	
 	@Test
