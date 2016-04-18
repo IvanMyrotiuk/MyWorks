@@ -17,8 +17,8 @@ public class Pizza {
 	 this.name = name;
 	 this.price = price;
 	 this.type = type;
-	 currentId = id;
-	 currentId++;
+//	 currentId = id;
+//	 currentId++;
 	 }
 
 	public Pizza(String name, double price, Type type) {

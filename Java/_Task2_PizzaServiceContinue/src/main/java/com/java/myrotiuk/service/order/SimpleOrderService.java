@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 
 import com.java.myrotiuk.domain.AccruedCard;
@@ -27,21 +29,25 @@ import com.java.myrotiuk.service.discount.DiscountProvider;
 import com.java.myrotiuk.service.discount.DiscountService;
 import com.java.myrotiuk.service.discount.SimpleDiscountService;
 
-@Service // ("orderService")
+@Service// ("orderService")
 public class SimpleOrderService implements OrderService {
 
+	//@Autowired
+	//@Qualifier("inMemPizzaRepository")//("pizzaRepositoryy")//("inMemPizzaRepository")
 	private PizzaRepository pizzaRepository; // = new InMemPizzaRepository();
+	//@Autowired
 	private OrderRepository orderRepository; // = new InMemOrderRepository();
+	//@Autowired
 	private AccruedCardService cardService; // = new
 											// SimpleAccruedCardService(new
-											// InMemAccruedCardRepository());
+	//@Autowired										// InMemAccruedCardRepository());
 	private DiscountService discountService; // = new SimpleDiscountService(new
 												// DiscountProvider(cardService));
 
 	@Autowired
-	public SimpleOrderService(PizzaRepository pizzaRepository, OrderRepository orderRepository,
+	public SimpleOrderService(PizzaRepository pizzaRepositoryy, OrderRepository orderRepository,
 			AccruedCardService cardService, DiscountService discountService) {
-		this.pizzaRepository = pizzaRepository;
+		this.pizzaRepository = pizzaRepositoryy;
 		this.orderRepository = orderRepository;
 		this.cardService = cardService;
 		this.discountService = discountService;

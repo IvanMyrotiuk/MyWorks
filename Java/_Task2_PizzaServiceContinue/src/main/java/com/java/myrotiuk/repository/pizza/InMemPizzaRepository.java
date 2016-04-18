@@ -3,11 +3,13 @@ package com.java.myrotiuk.repository.pizza;
 import java.util.List;
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.java.myrotiuk.domain.Pizza;
 
-@Repository("pizzaRepository")
+@Repository("pizzaRepositoryy")
+//@Qualifier("pizzaRepository")
 public class InMemPizzaRepository implements PizzaRepository {
 
 	private List<Pizza> pizzas; //= new ArrayList<>();
@@ -28,5 +30,29 @@ public class InMemPizzaRepository implements PizzaRepository {
     	}
     	return null;
     }
+
+	@Override
+	public List<Pizza> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update(Pizza pizza) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int insert(Pizza pizza) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void delete(int id) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

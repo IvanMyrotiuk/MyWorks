@@ -129,32 +129,67 @@ public class SimpleOrderServiceTest {
 	}
 	
 	@Test
-	public void shouldReturnOrderWithStatusDone(){
-		Order order = new Order();
-		Order orderSpy = spy(order);
-		orderSpy.setOrderStatus(OrderStatus.IN_PROGRESS);
-		when(orderRepository.getOrder(1)).thenReturn(Optional.of(orderSpy));
-		doReturn(20.0).when(orderSpy).getOrderPrice();
-		when(orderSpy.getCustomer()).thenReturn(customer);
+	public void shoulCallSetPrice(){//dReturnOrderWithStatusDone(){
+//		Order order = new Order();
+//		Order orderSpy = spy(order);
+//		orderSpy.setOrderStatus(OrderStatus.IN_PROGRESS);
+//		when(orderRepository.getOrder(1)).thenReturn(Optional.of(orderSpy));
+//		doReturn(20.0).when(orderSpy).getOrderPrice();
+//		when(orderSpy.getCustomer()).thenReturn(customer);
+//		when(cardService.findCardByCustomer(customer)).thenReturn(Optional.empty());
+//		Order orderProgress = orderService.completeOrder(1);
+//		assertEquals(OrderStatus.DONE, orderProgress.getOrderStatus());
+		Order order = mock(Order.class);
+		when(orderRepository.getOrder(1)).thenReturn(Optional.of(order));
+		when(order.getOrderStatus()).thenReturn(OrderStatus.IN_PROGRESS);
+		when(order.getOrderPrice()).thenReturn(100.0);
+//		order.setOrderStatus(OrderStatus.DONE);
+		when(order.next()).thenReturn(order);
+		when(discountService.getDiscount(order)).thenReturn(30.0);
+		when(order.getCustomer()).thenReturn(customer);
 		when(cardService.findCardByCustomer(customer)).thenReturn(Optional.empty());
-		Order orderProgress = orderService.completeOrder(1);
-		assertEquals(OrderStatus.DONE, orderProgress.getOrderStatus());
+		Order resultOrder = orderService.completeOrder(1);
+//		System.out.println(resultOrder.getOrderStatus()); //how to check order status is done?
+		verify(order).setOrderPrice(70.0);
+		verify(orderRepository).updateOrder(order);
+	}
+	
+	@Test
+	public void shouldSetAmountToTheCard(){
+		Order order = mock(Order.class);
+		AccruedCard card = mock(AccruedCard.class);
+		when(orderRepository.getOrder(1)).thenReturn(Optional.of(order));
+		when(order.getOrderStatus()).thenReturn(OrderStatus.IN_PROGRESS);
+		when(order.getOrderPrice()).thenReturn(100.0);
+		when(order.next()).thenReturn(order);
+		when(discountService.getDiscount(order)).thenReturn(30.0);
+		when(order.getCustomer()).thenReturn(customer);
+		when(cardService.findCardByCustomer(customer)).thenReturn(Optional.of(card));
+		when(card.getAmount()).thenReturn(100.0);
+		
+		Order resultOrder = orderService.completeOrder(1);
+		verify(card).setAmount(170.0);
+		verify(cardService).updateCard(card);
+		verify(orderRepository).updateOrder(order);
+		
 	}
 	
 	@Test//!!!
 	public void shouldReturnAmountOfCard(){
-		Order order = new Order();
-		Order orderSpy = spy(order);
-		orderSpy.setOrderPrice(1000);
-		orderSpy.setOrderStatus(OrderStatus.IN_PROGRESS);
-		when(orderRepository.getOrder(1)).thenReturn(Optional.of(orderSpy));
-		when(discountService.getDiscount(orderSpy)).thenReturn(200.0);
-		when(orderSpy.getCustomer()).thenReturn(customer);
-		AccruedCard card = new AccruedCard(customer);
-		card.setAmount(300);
-		when(cardService.findCardByCustomer(customer)).thenReturn(Optional.of(card));
-		Order orderProgress = orderService.completeOrder(1);
-		assertEquals(1100.0, card.getAmount(), 0);
+//		Order order = new Order();
+//		Order orderSpy = spy(order);
+//		orderSpy.setOrderPrice(1000);
+//		orderSpy.setOrderStatus(OrderStatus.IN_PROGRESS);
+//		when(orderRepository.getOrder(1)).thenReturn(Optional.of(orderSpy));
+//		when(discountService.getDiscount(orderSpy)).thenReturn(200.0);
+//		when(orderSpy.getCustomer()).thenReturn(customer);
+//		AccruedCard card = new AccruedCard(customer);
+//		card.setAmount(300);
+//		when(cardService.findCardByCustomer(customer)).thenReturn(Optional.of(card));
+//		Order orderProgress = orderService.completeOrder(1);
+//		assertEquals(1100.0, card.getAmount(), 0);
+		Order order = mock(Order.class);
+		
 	}
 	
 	@Test(expected = WrongIdOfOrderException.class)

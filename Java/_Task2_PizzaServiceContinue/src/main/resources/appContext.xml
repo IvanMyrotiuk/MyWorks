@@ -11,11 +11,13 @@
 		<context:include-filter type="annotation" expression="com.java.myrotiuk.infrustructure.Domain"/>
 		<!-- <context:include-filter type="assignable" expression="com.java.myrotiuk.domain.Order"/> -->
 	</context:component-scan>
-	
 	<context:component-scan base-package="com.java.myrotiuk.service"/>
+<!-- 	<bean class=" com.java.myrotiuk.service.order.SimpleOrderService$$EnhancerBySpringCGLIB$$81dd6108" abstract="true"/> -->
 
 	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor"/>
-	
+	 
+	 
+	 
 	<!--
 	 <import resource="repositoryContext.xml"/>
 	

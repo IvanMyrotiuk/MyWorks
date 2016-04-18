@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context = "http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	 http://www.springframework.org/schema/beans/spring-beans.xsd
 	 http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:component-scan base-package="com.java.myrotiuk.repository"/>
-	<context:component-scan base-package="com.java.myrotiuk.configuration"/>
+	<context:component-scan base-package="com.java.myrotiuk.repository" />
+	<context:component-scan base-package="com.java.myrotiuk.configuration" />
 
-	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor"/>
-	
-	<!-- 
-	<bean id="pizzaRepository" class="com.java.myrotiuk.repository.pizza.InMemPizzaRepository"/>
-	<bean id="orderRepository" class="com.java.myrotiuk.repository.order.InMemOrderRepository"/>
-	<bean id="cardRepository" class="com.java.myrotiuk.repository.card.InMemAccruedCardRepository"/> 
-	-->
-	
+	<bean id="dataSource"
+		class="org.apache.tomcat.dbcp.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/pizza_service" />
+		<property name="username" value="root" />
+		<property name="password" value="mysql" />
+		<property name="initialSize" value="5"/>
+		<property name="maxActive" value="10"/>
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean
+		class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor" />
+
+	<!-- <bean id="pizzaRepository" class="com.java.myrotiuk.repository.pizza.InMemPizzaRepository"/> 
+		<bean id="orderRepository" class="com.java.myrotiuk.repository.order.InMemOrderRepository"/> 
+		<bean id="cardRepository" class="com.java.myrotiuk.repository.card.InMemAccruedCardRepository"/> -->
+
 </beans>
