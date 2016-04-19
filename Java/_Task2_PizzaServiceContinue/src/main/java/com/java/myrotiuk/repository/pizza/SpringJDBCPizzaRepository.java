@@ -26,7 +26,7 @@ public class SpringJDBCPizzaRepository implements PizzaRepository {
 //	@Autowired
 //	private DataSource dataSource;
 	@Autowired
-	private JdbcTemplate jdbcTamplate;
+	private JdbcTemplate jdbcTamplate; //Template
 	
 	@Override
 	public Pizza getPizzaByID(int id) {
