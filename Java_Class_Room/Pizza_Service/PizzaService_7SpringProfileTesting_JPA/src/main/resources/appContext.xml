@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd"
+        >
+
+<!--  2-->
+		<!-- <import resource="repositoryContext.xml"/> --><!-- 4 -->
+		
+		<!-- <import resource="repositoryTestContext.xml"/> -->
+	
+	<bean name="orderService" class="com.java.myrotiuk.pizza.service.SimpleOrderService"
+		autowire="byType"><!-- byName -->
+		<constructor-arg ref="orderRepository"/>
+		<constructor-arg ref="pizzaRepository"/>
+		<!-- <property name="order" ref="order"></property> -->
+		<lookup-method name="createOrder" bean="order"/><!-- method that we want to implement -->
+	</bean>
+	
+<!-- 	
+	<bean id = "createPizzaService" class="com.java.myrotiuk.pizza.service.CreatePizzaService"/>	6 can separate
+	<bean  factory-bean="createPizzaService" factory-method="createPizza">id="fromFactoryPizza" get bean by class
+		<constructor-arg><null/></constructor-arg>
+		<constructor-arg value="Pizza1"/>
+		<constructor-arg value="2.8"/>
+		<constructor-arg value="SEA"/>
+	</bean>
+
+	<bean id = "customer" class="com.java.myrotiuk.pizza.domain.Customer" autowire-candidate="false">
+		<constructor-arg value="1"/>
+		<constructor-arg value="Abc"/>
+	</bean> -->
+	
+
+	
+	<!-- New -->
+	<bean name="order" class="com.java.myrotiuk.pizza.domain.Order" scope="prototype"/>
+	
+	<!-- New!!!!!!!!!!! -->
+	<!--  <bean class="com.java.myrotiuk.pizza.domain.Customer"/>   -->
+<!-- 	<bean class="com.java.myrotiuk.pizza.infrastructure.BenchMarkProxyBeanPostProcessor"/> -->
+
+	<!-- working with inherited context -->
+ <!-- 	<bean id = "customer1" class="com.java.myrotiuk.pizza.domain.Customer" primary="true">
+		<constructor-arg value="3"/>
+		<constructor-arg value="appContext"/>
+	</bean>   -->
+
+</beans>

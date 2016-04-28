@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -21,7 +24,10 @@ public class PizzaApp {
 
 	public static void main(String[] args) {
 
-		Customer customer = new Customer("John", new Address("Beverly Hills", "7777-777-77"));
+		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa");
+		
+		Address address = new Address(new Customer("John"),"Beverly Hills", "7777-777-77");
+		//Customer customer = new Customer("John", new Address("Beverly Hills", "7777-777-77"));
 		Order order;
 		
 		ConfigurableApplicationContext repositoryContext = new ClassPathXmlApplicationContext("repositoryContext.xml");
@@ -31,20 +37,20 @@ public class PizzaApp {
 		appContext.setParent(repositoryContext);
 		appContext.refresh();
 		
-		PizzaRepository repo = appContext.getBean("springJDBCPizzaRepository", SpringJDBCPizzaRepository.class);
-		Pizza myPizza = repo.getPizzaByID(3);
+		/*PizzaRepository repo = appContext.getBean("springJDBCPizzaRepository", SpringJDBCPizzaRepository.class);
+		Pizza myPizza = repo.find(3);
 		System.out.println("myPiza from DB"+myPizza);
 		//System.out.println(repo.insert(new Pizza("Strong beef2",111.5,Type.MEAT)));
-		Pizza pizzaTOUpdate = repo.getPizzaByID(3);
+		Pizza pizzaTOUpdate = repo.find(3);
 		pizzaTOUpdate.setName("Blue SKY");
 		repo.update(pizzaTOUpdate);
 		//repo.delete(2);
-		System.out.println("pizza by id=>"+repo.getPizzaByID(3));
-		System.out.println("listOfPizzas=>"+ repo.getAll());
+		System.out.println("pizza by id=>"+repo.find(3));
+		System.out.println("listOfPizzas=>"+ repo.getAll());*/
 		
 		
 		OrderService orderService = (OrderService) appContext.getBean(OrderService.class);//"simpleOrderService");//= new SimpleOrderService();
-		order = orderService.placeNewOrder(customer, 1, 2, 3);
+		order = orderService.placeNewOrder(address, 1, 2, 3);
 		System.out.println(order);
 		System.out.println(orderService.getClass().getName());
 		appContext.close();

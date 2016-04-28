@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.java.myrotiuk.domain.Pizza;
 
-@Repository("pizzaRepositoryy")
+//@Repository("pizzaRepositoryy")
 //@Qualifier("pizzaRepository")
 public class InMemPizzaRepository implements PizzaRepository {
 
@@ -20,10 +20,11 @@ public class InMemPizzaRepository implements PizzaRepository {
 	@Resource(name = "pizzasList")
 	public void setPizzas(List<Pizza> pizzas){
 		this.pizzas = pizzas;
+		//System.out.println(pizzas);
 	}
 	
 	@Override
-	public Pizza getPizzaByID(int id){
+	public Pizza find(long id){
     	for(Pizza pizza: pizzas){
     		if(pizza.getId() == id)
     			return pizza;
@@ -38,21 +39,20 @@ public class InMemPizzaRepository implements PizzaRepository {
 	}
 
 	@Override
-	public void update(Pizza pizza) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int insert(Pizza pizza) {
+	public long insert(Pizza entity) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(long id) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
+	public void update(Pizza entity) {
+		// TODO Auto-generated method stub
+		
+	}
 }

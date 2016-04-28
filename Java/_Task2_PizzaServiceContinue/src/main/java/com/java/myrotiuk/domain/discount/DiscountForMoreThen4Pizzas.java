@@ -3,6 +3,7 @@ package com.java.myrotiuk.domain.discount;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import com.java.myrotiuk.domain.Pizza;
 
@@ -10,9 +11,9 @@ public class DiscountForMoreThen4Pizzas implements Discount {
 
 	private final static double DISCOUNT = 0.3d;
 
-	private List<Pizza> pizzas;
+	private Set<Pizza> pizzas;
 	
-	public DiscountForMoreThen4Pizzas(List<Pizza> pizzas){
+	public DiscountForMoreThen4Pizzas(Set<Pizza> pizzas){
 		if(pizzas == null){
 			throw new IllegalArgumentException();
 		}

@@ -1,35 +1,29 @@
 package com.java.myrotiuk.domain;
 
-import java.util.Optional;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Customer {
-	private int id;
-	private String name;
-	private Address address;
-	private static int currentId = 1;
 	
-	public Customer(String name, Address address) {
-		this.address = address;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private long id;
+	private String name;
+	private String login;
+	
+	public Customer() {
+	}
+	
+	public Customer(String name) {
 		this.name = name;
-		this.id = currentId++;
-		//Optional.of//(address);
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-
-//	public void setId(int id) {
-//		this.id = id;
-//	}
 
 	public String getName() {
 		return name;
@@ -41,8 +35,7 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + "]";
+		return "Customer [id=" + id + ", name=" + name + ", login=" +  login+"]";
 	}
-	
 	
 }

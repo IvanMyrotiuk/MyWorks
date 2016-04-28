@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.domain.Pizza.Type;
 
-@Repository
+//@Repository
 public class SpringJDBCPizzaRepository implements PizzaRepository {
 
 //	@Autowired
@@ -29,7 +29,7 @@ public class SpringJDBCPizzaRepository implements PizzaRepository {
 	private JdbcTemplate jdbcTamplate; //Template
 	
 	@Override
-	public Pizza getPizzaByID(int id) {
+	public Pizza find(long id) {
 		String sql = "select * from pizza where id = ?";
 		return jdbcTamplate.queryForObject(sql, new Object[]{id}, new PizzaMapper());
 	}
@@ -51,7 +51,7 @@ public class SpringJDBCPizzaRepository implements PizzaRepository {
 		jdbcTamplate.update(sql, pizza.getName(), pizza.getId());
 	}
 	
-	public int insert(Pizza pizza){
+	public long insert(Pizza pizza){
 		
 		String sql = "insert into pizza(name, price, type) values (?,?,?);";
 		
@@ -74,7 +74,7 @@ public class SpringJDBCPizzaRepository implements PizzaRepository {
 		return holder.getKey().intValue();
 	}
 	
-	public void delete(int id){
+	public void delete(long id){
 		String sql = "delete from pizza where id = ?";
 		jdbcTamplate.update(sql, id);
 	}

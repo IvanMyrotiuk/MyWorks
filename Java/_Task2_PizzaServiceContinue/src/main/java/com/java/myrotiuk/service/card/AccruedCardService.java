@@ -7,6 +7,6 @@ import com.java.myrotiuk.domain.Customer;
 
 public interface AccruedCardService {
 	Optional<AccruedCard> findCardByCustomer(Customer customer);
-	int giveCardToCustomer(Customer customer);
-	int updateCard(AccruedCard accruedCard);
+	long giveCardToCustomer(Customer customer, String name);
+	void updateCard(AccruedCard accruedCard);
 }

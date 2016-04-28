@@ -180,5 +180,4 @@ public class OrderTest {
 		double result = order.countOrderPrice();
 		assertEquals(1105.0, result, 0);
 	}
-	
 }

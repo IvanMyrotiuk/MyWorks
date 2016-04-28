@@ -2,6 +2,7 @@ package com.java.myrotiuk.service.discount;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class DiscountProvider {
 	}
 	
 	public List<Discount> provideDiscounts(Order order){
-		Optional<AccruedCard> accCard = cardService.findCardByCustomer(order.getCustomer());
+		Optional<AccruedCard> accCard = cardService.findCardByCustomer(order.getAddress().getCustomer());
 		List<Discount> discounts = new ArrayList<>();
 		discounts.add(createDiscountForMoreThen4Pizzas(order.getPizzas()));
 		discounts.add(createDiscountFromAccruedCard(order.getOrderPrice(), accCard));
@@ -37,8 +38,8 @@ public class DiscountProvider {
 		return new DiscountFromAccruedCard(accCard, orderPrice);
 	}
 
-	DiscountForMoreThen4Pizzas createDiscountForMoreThen4Pizzas(List<Pizza> pizzas) {
-		return new DiscountForMoreThen4Pizzas(pizzas);
+	DiscountForMoreThen4Pizzas createDiscountForMoreThen4Pizzas(Map<Pizza, Integer> pizzas) {
+		return new DiscountForMoreThen4Pizzas(pizzas.keySet());
 	}
 	
 }

@@ -13,12 +13,12 @@ public class InMemOrderRepository implements OrderRepository {
 
 	private List<Order> orders = new ArrayList<>();
 	@Override
-	public long saveOrder(Order newOrder) {
+	public long insert(Order newOrder) {
 		orders.add(newOrder);
     	return newOrder.getId();
 	}
 	
-	public long updateOrder(Order order){
+	public void update(Order order){
 		long id = 0;
 		for(Order o :orders){
 			if(o.getId() == order.getId()){
@@ -26,7 +26,7 @@ public class InMemOrderRepository implements OrderRepository {
 				id = order.getId();
 			}
 		}
-		return id;
+		//return id;
 	}
 	
 	public List<Order> getOrders(){
@@ -41,5 +41,23 @@ public class InMemOrderRepository implements OrderRepository {
 			}
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public List<Order> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Order find(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(long id) {
+		// TODO Auto-generated method stub
+		
 	}
 }

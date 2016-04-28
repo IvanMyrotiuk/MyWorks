@@ -15,21 +15,21 @@ public class InMemAccruedCardRepository implements AccruedCardRepository{
 	private List<AccruedCard> cards = new ArrayList<>();
 	
 	@Override
-	public int saveCard(AccruedCard card) {
+	public long insert(AccruedCard card) {
 		cards.add(card);
 		return card.getId();
 	}
 
 	@Override
-	public int updateCard(AccruedCard card) {
-		int id = 0;
+	public void update(AccruedCard card) {
+		long id = 0;
 		for(AccruedCard c : cards){
 			if(c.getId() == card.getId()){
 				c = card;
 				id = c.getId();
 			}
 		}
-		return id;
+		//return id;
 	}
 
 	@Override
@@ -45,5 +45,23 @@ public class InMemAccruedCardRepository implements AccruedCardRepository{
 			}
 		}
 		return accCard;
+	}
+
+	@Override
+	public List<AccruedCard> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AccruedCard find(long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(long id) {
+		// TODO Auto-generated method stub
+		
 	}
 }

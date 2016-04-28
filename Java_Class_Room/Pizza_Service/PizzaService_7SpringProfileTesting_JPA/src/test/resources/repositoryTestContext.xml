@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans.xsd"
+	 profile="dev">
+
+<!-- 	<bean name="pizzaRepository"
+		class="com.java.myrotiuk.pizza.repository.inmempizza.InMemPizzaRepository"
+		init-method="cookPizzas" /> -->
+
+	<bean name="orderRepository"
+		class="com.java.myrotiuk.pizza.repository.inmemorder.InMemOrderRepository" />
+
+
+	<!-- <bean id="createPizzaService" class="com.java.myrotiuk.pizza.service.CreatePizzaService" /> -->
+
+	<!-- 7 create list and pass to the method -->
+	<bean id="pizzaRepository"
+		class="com.java.myrotiuk.pizza.repository.inmempizza.InMemPizzaRepository"
+		><!-- init-method="cookPizzas" -->
+		<property name="pizzas">
+			<list>
+				<bean class="com.java.myrotiuk.pizza.domain.Pizza">
+					<constructor-arg value="1"/>
+					<constructor-arg value="PizzaTEST" />
+					<constructor-arg value="2.8" />
+					<constructor-arg value="SEA" />
+				</bean>
+				<bean class="com.java.myrotiuk.pizza.domain.Pizza">
+					<constructor-arg value="2"/>
+					<constructor-arg value="Pizza2" />
+					<constructor-arg value="3.4" />
+					<constructor-arg value="MEAT" />
+				</bean> 
+				<bean class="com.java.myrotiuk.pizza.domain.Pizza">
+					<constructor-arg value="3"/>
+					<constructor-arg value="Pizza3" />
+					<constructor-arg value="3.4" />
+					<constructor-arg value="VEGETERIAN" />
+				</bean> 
+			</list>
+		</property>
+	</bean>
+	
+	<!-- New!!!!!!!! -->
+	<!-- <bean class="com.java.myrotiuk.pizza.domain.Customer"/>  -->
+<!-- 	<bean class="com.java.myrotiuk.pizza.infrastructure.BenchMarkProxyBeanPostProcessor"/> -->
+
+	<!-- working with inherited context -->
+	<bean id = "customer1" class="com.java.myrotiuk.pizza.domain.Customer" primary="true">
+		<constructor-arg value="2"/>
+		<constructor-arg value="repoTestConfig"/>
+	</bean>
+</beans>

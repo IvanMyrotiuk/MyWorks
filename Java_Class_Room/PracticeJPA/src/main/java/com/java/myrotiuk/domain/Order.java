@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.MapKeyJoinColumns;
 
@@ -29,7 +30,8 @@ public class Order {
 	
 	
 	@ElementCollection
-	@CollectionTable(name = "Order_Pizzas", joinColumns = {@JoinColumn(columnDefinition = "ORDERR_IDdddd")})
+	@CollectionTable(name = "Order_Pizzas", joinColumns = {@JoinColumn(name = "ORDERR_IDdddd")})
+	//@JoinTable(name = "JoinTableOrderPizzas", joinColumns = {@JoinColumn(name = "Order_idddd")})
 	@MapKeyJoinColumn(name = "PIZZASSSS_ID")
 	@Column(name = "Quantityy")
 	//@Cascade(value={CascadeType.ALL})

@@ -1,28 +1,35 @@
 package com.java.myrotiuk.domain;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+@Entity
 public class AccruedCard {
-	private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private long id;
+	private String name;
 	private double amount;
-	private static int currentId = 1;
+	@OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+	@JoinColumn(name = "customer_id", unique = true)
 	private Customer customer;
 	
-	public AccruedCard(Customer customer) {
+	public AccruedCard() {
+	}
+	
+	public AccruedCard(Customer customer, String name) {
 		this.customer = customer;
-		this.id = currentId++;
+		this.name = name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
-	}
-
-//	public void setId(int id) {
-//		this.id = id;
-//	}
-	
-	
-
-	public double getAmount() {
-		return amount;
 	}
 
 	public Customer getCustomer() {
@@ -35,5 +42,22 @@ public class AccruedCard {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	
+	public double getAmount() {
+		return amount;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "AccruedCard [id=" + id + ", name=" + name + ", amount=" + amount + ", customer=" + customer + "]";
 	}
 }

@@ -1,8 +1,12 @@
 package com.java.myrotiuk.service.order;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
@@ -11,6 +15,7 @@ import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 
 import com.java.myrotiuk.domain.AccruedCard;
+import com.java.myrotiuk.domain.Address;
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
 import com.java.myrotiuk.domain.Order.OrderStatus;
@@ -28,21 +33,18 @@ import com.java.myrotiuk.service.card.SimpleAccruedCardService;
 import com.java.myrotiuk.service.discount.DiscountProvider;
 import com.java.myrotiuk.service.discount.DiscountService;
 import com.java.myrotiuk.service.discount.SimpleDiscountService;
+import com.java.myrotiuk.service.entitymanager.EntityManagerService;
 
 @Service// ("orderService")
 public class SimpleOrderService implements OrderService {
 
-	//@Autowired
-	//@Qualifier("inMemPizzaRepository")//("pizzaRepositoryy")//("inMemPizzaRepository")
-	private PizzaRepository pizzaRepository; // = new InMemPizzaRepository();
-	//@Autowired
-	private OrderRepository orderRepository; // = new InMemOrderRepository();
-	//@Autowired
-	private AccruedCardService cardService; // = new
-											// SimpleAccruedCardService(new
-	//@Autowired										// InMemAccruedCardRepository());
-	private DiscountService discountService; // = new SimpleDiscountService(new
-												// DiscountProvider(cardService));
+	@Autowired
+	private EntityManagerService ems;
+	
+	private PizzaRepository pizzaRepository; 
+	private OrderRepository orderRepository; 
+	private AccruedCardService cardService; 
+	private DiscountService discountService; 
 
 	@Autowired
 	public SimpleOrderService(PizzaRepository pizzaRepositoryy, OrderRepository orderRepository,
@@ -54,31 +56,45 @@ public class SimpleOrderService implements OrderService {
 	}
 
 	@BenchMark
-	public Order placeNewOrder(Customer customer, Integer... pizzasID) {
+	public Order placeNewOrder(Address address, Integer... pizzasID) {
 
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
 		int countPizzas = pizzasID.length;
 		if (countPizzas > 0 && countPizzas <= 10) {
 
-			awardCard(customer);
+			awardCard(address.getCustomer(),"accrued card");
 
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
-			// Order newOrder = createOrder(customer, pizzas);
+			Map<Pizza, Integer> pizzasQuantity = new HashMap<>();
+			for(Pizza p : pizzas ){
+				if(pizzasQuantity.containsKey(p)){
+					Integer oldQ = pizzasQuantity.get(p);
+					pizzasQuantity.put(p, oldQ + 1);
+				}else{
+					pizzasQuantity.put(p, 1);
+				}
+			}
 			Order newOrder = createOrder();
-			newOrder.setCustomer(customer);
-			newOrder.setPizzas(pizzas);
+			newOrder.setAddress(address);
+			newOrder.setPizzas(pizzasQuantity);
 
-			orderRepository.saveOrder(newOrder); // set Order Id and save Order
+			orderRepository.insert(newOrder); // set Order Id and save Order
 													// to in-memory list
+			em.getTransaction().commit();
+			em.close();
 			return newOrder;
 		} else {
+			em.close();
 			throw new IllegalArgumentException("Inapropriate amount of pizzas");
 		}
+		
 	}
 
-	public int awardCard(Customer customer) {
+	public long awardCard(Customer customer, String name) {
 		Optional<AccruedCard> card = cardService.findCardByCustomer(customer);
 		if (!card.isPresent()) {
-			return cardService.giveCardToCustomer(customer);
+			return cardService.giveCardToCustomer(customer, name);
 		}
 		return card.get().getId();
 	}
@@ -89,7 +105,7 @@ public class SimpleOrderService implements OrderService {
 			Order processedOrder = order.get();
 			if (processedOrder.getOrderStatus() == OrderStatus.NEW) {
 				processedOrder.next();
-				orderRepository.updateOrder(processedOrder);
+				orderRepository.update(processedOrder);
 				return processedOrder;
 			} else {
 				throw new StatusOrderException("You can not switch" + processedOrder.getOrderStatus() + " status to "
@@ -107,14 +123,15 @@ public class SimpleOrderService implements OrderService {
 				Order completedOrder = orderToComplete.next();
 				double priceAfterDiscount = completedOrder.getOrderPrice()- discountService.getDiscount(completedOrder);
 				completedOrder.setOrderPrice(priceAfterDiscount);
+				Address address = completedOrder.getAddress(); 
 				Optional<AccruedCard> optionalAccruedCard = cardService
-						.findCardByCustomer(completedOrder.getCustomer());
+						.findCardByCustomer(address.getCustomer());
 				if (optionalAccruedCard.isPresent()) {
 					AccruedCard accruedCard = optionalAccruedCard.get();
 					accruedCard.setAmount(accruedCard.getAmount() + priceAfterDiscount);
 					cardService.updateCard(accruedCard);
 				}
-				orderRepository.updateOrder(completedOrder);
+				orderRepository.update(completedOrder);
 				return completedOrder;
 			} else {
 				throw new StatusOrderException(
@@ -130,7 +147,7 @@ public class SimpleOrderService implements OrderService {
 		if (order.isPresent()) {
 			Order orderToCancel = order.get();
 			Order canceledOrder = orderToCancel.cancel();
-			orderRepository.updateOrder(canceledOrder);
+			orderRepository.update(canceledOrder);
 			return canceledOrder;
 		} else {
 			throw new WrongIdOfOrderException("There is no such order");
@@ -148,7 +165,7 @@ public class SimpleOrderService implements OrderService {
 			if (countPizzas > 0 && countFinalPizzas <= 10 && order.getOrderStatus() == OrderStatus.NEW) {
 				List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
 				order.addPizzas(pizzas);
-				orderRepository.saveOrder(order);
+				orderRepository.insert(order);
 				return true;
 			}
 		}
@@ -179,7 +196,7 @@ public class SimpleOrderService implements OrderService {
 		List<Pizza> pizzas = new ArrayList<>();
 
 		for (Integer id : pizzasID) {
-			pizzas.add(pizzaRepository.getPizzaByID(id)); // get Pizza from
+			pizzas.add(pizzaRepository.find(id)); // get Pizza from
 															// predifined
 															// in-memory list
 		}

@@ -1,9 +1,22 @@
 package com.java.myrotiuk.domain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyJoinColumn;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,24 +28,31 @@ import com.java.myrotiuk.infrustructure.Domain;
 //@Component
 @Domain
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Entity(name = "OrderPizza")
 public class Order {
-	private Long id;
-	private Customer customer;
-	private List<Pizza> pizzas;
-	private static long currentId;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private long id;
+	
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "address_id")
+	private Address address;
+	
+	@ElementCollection
+	//@JoinTable(name = "Order_Pizza",joinColumns = {@JoinColumn(name = "Order_id")})
+	@CollectionTable(name = "Order_Pizza", joinColumns = {@JoinColumn(name = "Order_id")})
+	@MapKeyJoinColumn(name = "Pizza_id")
+	@Column(name = "Quantity")
+	private Map<Pizza, Integer> pizzas;
+	
 	private double orderPrice;
+	
+	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
 	
 	public Order() {
 		this.orderStatus = OrderStatus.NEW;
-		this.id = ++currentId;
-	}
-	
-	public Order(Customer customer, List<Pizza> pizzas) {
-		this.customer = customer;
-		this.pizzas = pizzas;
-		this.orderStatus = OrderStatus.NEW;
-		this.id = ++currentId;
 	}
 
 	public enum OrderStatus {
@@ -93,38 +113,28 @@ public class Order {
 	public boolean changeOrderDeletePizza(Integer... pizzasID) {
 		if (this.getOrderStatus() == OrderStatus.NEW ) {
 
-			Pizza[] pizzasToSort = pizzas.toArray(new Pizza[pizzas.size()]);
-			Arrays.sort(pizzasToSort, new Comparator<Pizza>() {
-				public int compare(Pizza z1, Pizza z2) {
-					return z1.getId() - z2.getId();
-				}
-			});
-//			System.out.println(Arrays.asList(pizzasToSort));
-
-			for (Integer toDelete : pizzasID) {
-				int del = Arrays.binarySearch(pizzasToSort, pizzasToSort[toDelete - 1], new Comparator<Pizza>() {
-					public int compare(Pizza z1, Pizza z2) {
-						return z1.getId() - z2.getId();
+			for(Integer id: pizzasID){
+				for(Pizza p : pizzas.keySet()){
+					if(p.getId() == id){
+						pizzas.remove(p);
 					}
-				});
-				pizzasToSort[del] = null;
-			}
-
-			List<Pizza> newPizzas = new ArrayList<>();
-			for (Pizza pizzaToSet : pizzasToSort) {
-				if(pizzaToSet != null){
-					newPizzas.add(pizzaToSet);
 				}
 			}
-			pizzas = newPizzas;
 			return true;
 		}
 		return false;
 	}
 
 	public boolean addPizzas(List<Pizza> additionalPizzas) {
-		if (this.pizzas.size() + additionalPizzas.size() <= 10) {
-			this.pizzas.addAll(additionalPizzas);
+		if (this.pizzas.size() + additionalPizzas.size() <= 10 && this.getOrderStatus() == OrderStatus.NEW) {
+			for(Pizza p : additionalPizzas){
+				Integer count = pizzas.get(p);
+				if(count == null){
+					pizzas.put(p, 1);
+				}else{
+					pizzas.put(p, count + 1);
+				}
+			}
 			return true;
 		}
 		return false;
@@ -144,7 +154,7 @@ public class Order {
 	}
 
 	public double countOrderPrice() {
-		for (Pizza pizza : pizzas) {
+		for (Pizza pizza : pizzas.keySet()) {
 			orderPrice += pizza.getPrice();
 		}
 		return orderPrice;
@@ -158,27 +168,25 @@ public class Order {
 		return id;
 	}
 
-	// public void setId(Long id) {
-	// this.id = id;
-	// }
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public List<Pizza> getPizzas() {
+	public Map<Pizza, Integer> getPizzas() {
 		return pizzas;
 	}
 
-	public void setPizzas(List<Pizza> pizzas) {
+	public void setPizzas(Map<Pizza, Integer> pizzas) {
 		this.pizzas = pizzas;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", customer=" + customer + ", pizzas=" + pizzas + "]";
+		return "Order [id=" + id + ", address=" + address + ", pizzas=" + pizzas.keySet() + ", orderPrice=" + orderPrice
+				+ ", orderStatus=" + orderStatus + "]";
 	}
 }

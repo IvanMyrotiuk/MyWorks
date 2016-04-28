@@ -32,12 +32,12 @@ public class SimpleAccruedCardService implements AccruedCardService {
 		}
 	}
 	
-	public int giveCardToCustomer(Customer customer){
-		return cardRepository.saveCard(new AccruedCard(customer));
+	public long giveCardToCustomer(Customer customer, String name){
+		return cardRepository.insert(new AccruedCard(customer, name));
 	}
 	
-	public int updateCard(AccruedCard accruedCard){
-		return cardRepository.updateCard(accruedCard);
+	public void updateCard(AccruedCard accruedCard){
+		cardRepository.update(accruedCard);
 	}
 
 }
