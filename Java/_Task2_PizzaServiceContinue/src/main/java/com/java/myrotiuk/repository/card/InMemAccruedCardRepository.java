@@ -10,17 +10,17 @@ import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Customer;
 
 @Repository("cardRepository")
-public class InMemAccruedCardRepository implements AccruedCardRepository{
+public class InMemAccruedCardRepository{//implements AccruedCardRepository{
 
 	private List<AccruedCard> cards = new ArrayList<>();
 	
-	@Override
+	//@Override
 	public long insert(AccruedCard card) {
 		cards.add(card);
 		return card.getId();
 	}
 
-	@Override
+	//@Override
 	public void update(AccruedCard card) {
 		long id = 0;
 		for(AccruedCard c : cards){
@@ -32,7 +32,7 @@ public class InMemAccruedCardRepository implements AccruedCardRepository{
 		//return id;
 	}
 
-	@Override
+	//@Override
 	public AccruedCard getAccruedCardByCustomer(Customer customer) {
 		
 		AccruedCard accCard = null;
@@ -47,19 +47,19 @@ public class InMemAccruedCardRepository implements AccruedCardRepository{
 		return accCard;
 	}
 
-	@Override
+	//@Override
 	public List<AccruedCard> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	//@Override
 	public AccruedCard find(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	//@Override
 	public void delete(long id) {
 		// TODO Auto-generated method stub
 		

@@ -15,7 +15,6 @@ public class EntityManagerService {
 	
 	@PostConstruct
 	private void createEntityManagerFactory(){
-		System.out.println("jgfjvgjvgjvjvj");
 		emf = Persistence.createEntityManagerFactory("jpa");
 	}
 	

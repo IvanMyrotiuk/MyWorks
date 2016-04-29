@@ -21,21 +21,21 @@ import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.domain.Pizza.Type;
 
 //@Repository
-public class SpringJDBCPizzaRepository implements PizzaRepository {
+public class SpringJDBCPizzaRepository{// implements PizzaRepository {
 
 //	@Autowired
 //	private DataSource dataSource;
 	@Autowired
 	private JdbcTemplate jdbcTamplate; //Template
 	
-	@Override
+	//@Override
 	public Pizza find(long id) {
 		String sql = "select * from pizza where id = ?";
 		return jdbcTamplate.queryForObject(sql, new Object[]{id}, new PizzaMapper());
 	}
 	
 	private static final class PizzaMapper implements RowMapper<Pizza>{
-		@Override
+		//@Override
 		public Pizza mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return new Pizza(rs.getInt("id"), rs.getString("name"), rs.getDouble("price"), Type.valueOf(rs.getString("type")));
 		}
@@ -59,7 +59,7 @@ public class SpringJDBCPizzaRepository implements PizzaRepository {
 		
 		jdbcTamplate.update(new PreparedStatementCreator() {
 			
-			@Override
+			//@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				
 				PreparedStatement stmt = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);

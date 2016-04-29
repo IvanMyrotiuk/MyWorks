@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,8 @@ public class DiscountProvider {
 		this.cardService = cardService;
 	}
 	
-	public List<Discount> provideDiscounts(Order order){
-		Optional<AccruedCard> accCard = cardService.findCardByCustomer(order.getAddress().getCustomer());
+	public List<Discount> provideDiscounts(Order order, EntityManager em){
+		Optional<AccruedCard> accCard = cardService.findCardByCustomer(order.getAddress().getCustomer(), em);
 		List<Discount> discounts = new ArrayList<>();
 		discounts.add(createDiscountForMoreThen4Pizzas(order.getPizzas()));
 		discounts.add(createDiscountFromAccruedCard(order.getOrderPrice(), accCard));

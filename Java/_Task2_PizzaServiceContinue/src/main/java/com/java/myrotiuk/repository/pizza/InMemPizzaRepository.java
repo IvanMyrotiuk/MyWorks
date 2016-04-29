@@ -10,7 +10,7 @@ import com.java.myrotiuk.domain.Pizza;
 
 //@Repository("pizzaRepositoryy")
 //@Qualifier("pizzaRepository")
-public class InMemPizzaRepository implements PizzaRepository {
+public class InMemPizzaRepository {// implements PizzaRepository {
 
 	private List<Pizza> pizzas; //= new ArrayList<>();
 	{
@@ -23,7 +23,7 @@ public class InMemPizzaRepository implements PizzaRepository {
 		//System.out.println(pizzas);
 	}
 	
-	@Override
+	//@Override
 	public Pizza find(long id){
     	for(Pizza pizza: pizzas){
     		if(pizza.getId() == id)
@@ -32,25 +32,25 @@ public class InMemPizzaRepository implements PizzaRepository {
     	return null;
     }
 
-	@Override
+	//@Override
 	public List<Pizza> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	//@Override
 	public long insert(Pizza entity) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
+	//@Override
 	public void delete(long id) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void update(Pizza entity) {
 		// TODO Auto-generated method stub
 		

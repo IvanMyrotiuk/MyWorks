@@ -63,7 +63,8 @@ public class SimpleOrderService implements OrderService {
 		int countPizzas = pizzasID.length;
 		if (countPizzas > 0 && countPizzas <= 10) {
 
-			awardCard(address.getCustomer(),"accrued card");
+			em.persist(address.getCustomer());
+			awardCard(address.getCustomer(),"accrued card", em);
 
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
 			Map<Pizza, Integer> pizzasQuantity = new HashMap<>();
@@ -79,7 +80,7 @@ public class SimpleOrderService implements OrderService {
 			newOrder.setAddress(address);
 			newOrder.setPizzas(pizzasQuantity);
 
-			orderRepository.insert(newOrder); // set Order Id and save Order
+			orderRepository.insert(newOrder, em); // set Order Id and save Order
 													// to in-memory list
 			em.getTransaction().commit();
 			em.close();
@@ -91,72 +92,98 @@ public class SimpleOrderService implements OrderService {
 		
 	}
 
-	public long awardCard(Customer customer, String name) {
-		Optional<AccruedCard> card = cardService.findCardByCustomer(customer);
+	public long awardCard(Customer customer, String name, EntityManager em) {
+//		EntityManager em = ems.createEntityManager();
+//		em.getTransaction().begin();
+		Optional<AccruedCard> card = cardService.findCardByCustomer(customer, em);
 		if (!card.isPresent()) {
-			return cardService.giveCardToCustomer(customer, name);
+			return cardService.giveCardToCustomer(customer, name, em);
 		}
+//		em.getTransaction().commit();
+//		em.close();
 		return card.get().getId();
 	}
 
 	public Order processOrder(long orderId) {
-		Optional<Order> order = orderRepository.getOrder(orderId);
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
+		
+		Optional<Order> order = orderRepository.getOrder(orderId, em);
 		if (order.isPresent()) {
 			Order processedOrder = order.get();
 			if (processedOrder.getOrderStatus() == OrderStatus.NEW) {
 				processedOrder.next();
-				orderRepository.update(processedOrder);
+				orderRepository.update(processedOrder, em);
+				em.getTransaction().commit();
+				em.close();
 				return processedOrder;
 			} else {
+				em.close();
 				throw new StatusOrderException("You can not switch" + processedOrder.getOrderStatus() + " status to "
 						+ OrderStatus.IN_PROGRESS);
 			}
 		}
+		em.close();
 		throw new WrongIdOfOrderException("There is no such order");
 	}
 
 	public Order completeOrder(long orderId) {
-		Optional<Order> order = orderRepository.getOrder(orderId);
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
+		
+		Optional<Order> order = orderRepository.getOrder(orderId, em);
 		if (order.isPresent()) {
 			Order orderToComplete = order.get();
 			if (orderToComplete.getOrderStatus() == OrderStatus.IN_PROGRESS) {
 				Order completedOrder = orderToComplete.next();
-				double priceAfterDiscount = completedOrder.getOrderPrice()- discountService.getDiscount(completedOrder);
+				double priceAfterDiscount = completedOrder.getOrderPrice()- discountService.getDiscount(completedOrder,em);
 				completedOrder.setOrderPrice(priceAfterDiscount);
 				Address address = completedOrder.getAddress(); 
 				Optional<AccruedCard> optionalAccruedCard = cardService
-						.findCardByCustomer(address.getCustomer());
+						.findCardByCustomer(address.getCustomer(), em);
 				if (optionalAccruedCard.isPresent()) {
 					AccruedCard accruedCard = optionalAccruedCard.get();
 					accruedCard.setAmount(accruedCard.getAmount() + priceAfterDiscount);
-					cardService.updateCard(accruedCard);
+					cardService.updateCard(accruedCard, em);
 				}
-				orderRepository.update(completedOrder);
+				orderRepository.update(completedOrder, em);
+				em.getTransaction().commit();
+				em.close();
 				return completedOrder;
 			} else {
+				em.close();
 				throw new StatusOrderException(
 						"You can not switch" + orderToComplete.getOrderStatus() + " status to " + OrderStatus.DONE);
 			}
 		} else {
+			em.close();
 			throw new WrongIdOfOrderException("There is no such order");
 		}
 	}
 
 	public Order cancelOrder(long orderId) {
-		Optional<Order> order = orderRepository.getOrder(orderId);
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
+		Optional<Order> order = orderRepository.getOrder(orderId, em);
 		if (order.isPresent()) {
 			Order orderToCancel = order.get();
 			Order canceledOrder = orderToCancel.cancel();
-			orderRepository.update(canceledOrder);
+			orderRepository.update(canceledOrder, em);
+			em.getTransaction().commit();
+			em.close();
 			return canceledOrder;
 		} else {
+			em.close();
 			throw new WrongIdOfOrderException("There is no such order");
 		}
 	}
 
-	public boolean addPizzaToOrder(int orderId, Integer... pizzasID) {
+	public boolean addPizzaToOrder(long orderId, Integer... pizzasID) {
 
-		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
+		
+		Optional<Order> currentOrder = orderRepository.getOrder(orderId, em);
 		if (currentOrder.isPresent()) {
 			Order order = currentOrder.get();
 			int countOldPizzas = order.getPizzas().size();
@@ -165,19 +192,30 @@ public class SimpleOrderService implements OrderService {
 			if (countPizzas > 0 && countFinalPizzas <= 10 && order.getOrderStatus() == OrderStatus.NEW) {
 				List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
 				order.addPizzas(pizzas);
-				orderRepository.insert(order);
+				orderRepository.insert(order, em);
+				em.getTransaction().commit();
+				em.close();
 				return true;
 			}
 		}
+		em.getTransaction().commit();
+		em.close();
 		return false;
 	}
 
 	public boolean changeOrderDeletePizza(int orderId, Integer... pizzasID) {
-		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
+		Optional<Order> currentOrder = orderRepository.getOrder(orderId, em);
 		if (currentOrder.isPresent()) {
 			Order order = currentOrder.get();
+			
+			em.getTransaction().commit();
+			em.close();
 			return order.changeOrderDeletePizza(pizzasID);
 		}
+		em.getTransaction().commit();
+		em.close();
 		return false;
 	}
 
@@ -193,13 +231,17 @@ public class SimpleOrderService implements OrderService {
 	}
 
 	private List<Pizza> pizzasByArrOfId(Integer... pizzasID) {
+		EntityManager em = ems.createEntityManager();
+		em.getTransaction().begin();
 		List<Pizza> pizzas = new ArrayList<>();
 
 		for (Integer id : pizzasID) {
-			pizzas.add(pizzaRepository.find(id)); // get Pizza from
+			pizzas.add(pizzaRepository.find(id, em)); // get Pizza from
 															// predifined
 															// in-memory list
 		}
+		em.getTransaction().commit();
+		em.close();
 		return pizzas;
 	}
 }

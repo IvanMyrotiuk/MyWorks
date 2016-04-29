@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import com.java.myrotiuk.domain.Order;
 
 @Repository("orderRepository")
-public class InMemOrderRepository implements OrderRepository {
+public class InMemOrderRepository {//implements OrderRepository {
 
 	private List<Order> orders = new ArrayList<>();
-	@Override
+	//@Override
 	public long insert(Order newOrder) {
 		orders.add(newOrder);
     	return newOrder.getId();
@@ -33,7 +33,7 @@ public class InMemOrderRepository implements OrderRepository {
 		return orders;
 	}
 
-	@Override
+	//@Override
 	public Optional<Order> getOrder(long orderId) {
 		for(Order order: orders){
 			if(order.getId() == orderId){
@@ -43,19 +43,19 @@ public class InMemOrderRepository implements OrderRepository {
 		return Optional.empty();
 	}
 
-	@Override
+	//@Override
 	public List<Order> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	//@Override
 	public Order find(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	//@Override
 	public void delete(long id) {
 		// TODO Auto-generated method stub
 		

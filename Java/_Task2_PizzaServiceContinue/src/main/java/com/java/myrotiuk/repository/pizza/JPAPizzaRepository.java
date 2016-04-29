@@ -51,31 +51,30 @@ public class JPAPizzaRepository implements PizzaRepository{
 	}
 	
 	@Override
-	public List<Pizza> getAll() {
+	public List<Pizza> getAll(EntityManager em) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Pizza find(long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Pizza find(long id, EntityManager em) {
+		return em.find(Pizza.class, new Long(id));
 	}
 
 	@Override
-	public long insert(Pizza entity) {
+	public long insert(Pizza entity, EntityManager em) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(long id, EntityManager em) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void update(Pizza entity) {
+	public void update(Pizza entity, EntityManager em) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -51,9 +51,15 @@ public class PizzaApp {
 		
 		OrderService orderService = (OrderService) appContext.getBean(OrderService.class);//"simpleOrderService");//= new SimpleOrderService();
 		order = orderService.placeNewOrder(address, 1, 2, 3);
+		//SimpleOrderService simpleOrder = (SimpleOrderService)orderService;
+		orderService.addPizzaToOrder(order.getId(), 2,2,2);
+		//simpleOrder.changeOrderDeletePizza(order.getId(), 3);
+		orderService.processOrder(order.getId());
+		orderService.completeOrder(order.getId());
 		System.out.println(order);
 		System.out.println(orderService.getClass().getName());
 		appContext.close();
+		//price 0 ?
 	}
 
 }
