@@ -16,7 +16,7 @@ public class AccruedCard {
 	private long id;
 	private String name;
 	private double amount;
-	@OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+	@OneToOne//(cascade = CascadeType.ALL)//{CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name = "customer_id", unique = true)
 	private Customer customer;
 	

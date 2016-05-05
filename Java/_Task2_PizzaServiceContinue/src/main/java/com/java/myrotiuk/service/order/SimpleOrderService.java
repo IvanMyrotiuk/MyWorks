@@ -58,7 +58,7 @@ public class SimpleOrderService implements OrderService {
 		int countPizzas = pizzasID.length;
 		if (countPizzas > 0 && countPizzas <= 10) {
 
-			//customerRepository.insert(address.getCustomer());
+			customerRepository.insert(address.getCustomer());
 			System.out.println("IDDDDDDDDDD"+ address.getCustomer().getId());
 			awardCard(address.getCustomer(),"accrued card");
 

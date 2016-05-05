@@ -20,6 +20,7 @@ public class JPAOrderRepository implements OrderRepository{
 	
 	@Override
 	public Optional<Order> getOrder(long orderId) {
+		System.out.println("Order id To get!!!!!!!!!!"+orderId);
 		return Optional.of(em.find(Order.class, new Long(orderId)));
 	}
 
@@ -37,7 +38,7 @@ public class JPAOrderRepository implements OrderRepository{
 
 	@Override
 	public long insert(Order entity) {
-		em.persist(entity);
+		em.merge(entity);
 		return entity.getId();
 	}
 
