@@ -1,24 +1,12 @@
 package com.java.myrotiuk;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.java.myrotiuk.domain.Address;
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
-import com.java.myrotiuk.domain.Pizza;
-import com.java.myrotiuk.domain.Pizza.Type;
-import com.java.myrotiuk.repository.pizza.PizzaRepository;
-import com.java.myrotiuk.repository.pizza.SpringJDBCPizzaRepository;
 import com.java.myrotiuk.service.order.OrderService;
-import com.java.myrotiuk.service.order.SimpleOrderService;
 
 public class PizzaApp {
 
@@ -49,17 +37,27 @@ public class PizzaApp {
 		System.out.println("listOfPizzas=>"+ repo.getAll());*/
 		
 		
-		OrderService orderService = (OrderService) appContext.getBean(OrderService.class);//"simpleOrderService");//= new SimpleOrderService();
+		/*OrderService orderService = (OrderService) appContext.getBean(OrderService.class);//"simpleOrderService");//= new SimpleOrderService();
 		order = orderService.placeNewOrder(address, 1, 2, 3);
 		//SimpleOrderService simpleOrder = (SimpleOrderService)orderService;
 		orderService.addPizzaToOrder(order.getId(), 2,2,2);
 		//simpleOrder.changeOrderDeletePizza(order.getId(), 3);
 		orderService.processOrder(order.getId());
-		orderService.completeOrder(order.getId());
+		order = orderService.completeOrder(order.getId());
 		System.out.println(order);
 		System.out.println(orderService.getClass().getName());
+		*/
+		
+		OrderService orderService = appContext.getBean(OrderService.class);
+		order = orderService.placeNewOrder(address, 1, 2, 3);
+		orderService.addPizzaToOrder(order.getId(), 2,2,2);
+		orderService.processOrder(order.getId());
+		order = orderService.completeOrder(order.getId());
+		System.out.println(order);
+		System.out.println(orderService.getClass().getName());
+		
 		appContext.close();
-		//price 0 ?
+		
 	}
 
 }

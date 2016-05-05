@@ -1,33 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation=
+	"http://www.springframework.org/schema/beans
 	 http://www.springframework.org/schema/beans/spring-beans.xsd
 	 http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context.xsd">
+	 http://www.springframework.org/schema/context/spring-context.xsd
+	 http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<context:component-scan base-package="com.java.myrotiuk.repository" />
-	<bean id ="entityManagerService" class="com.java.myrotiuk.service.entitymanager.EntityManagerService"/>
-	<context:component-scan base-package="com.java.myrotiuk.configuration" />
+	
+	<context:property-placeholder system-properties-mode="NEVER" location="classpath:jdbc.properties"/><!-- system-properties-mode="OVERRIDE" -->
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
+          destroy-method="close">
+        <property name="driverClassName" value="${driver}"/>        
+        <property name="url" value="${url}"/>        
+        <property name="username" value="${user}"/>        
+        <property name="password" value="${password}"/> 
+        <property name="initialSize" value="5"/>       
+    </bean>
+	
+	 <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- <property name="persistenceUnitName" value="HiberanteMySQL" /> -->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="packagesToScan" value="com.java.myrotiuk.domain"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="transactionManager" 
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager" /> 
+	
+	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor" />
+	
+	
+	<!-- <context:component-scan base-package="com.java.myrotiuk.configuration" /> -->
 
-	<bean id="dataSource"
-		class="org.apache.tomcat.dbcp.dbcp.BasicDataSource">
+<!-- 	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/pizza_service" />
 		<property name="username" value="root" />
-		<property name="password" value="mysql" />
+		<property name="password" value="root" />
 		<property name="initialSize" value="5"/>
 		<property name="maxActive" value="10"/>
 	</bean>
 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"/>
-	</bean>
-
-
-
-	<bean
-		class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor" />
+	</bean>  -->
 
 	<!-- <bean id="pizzaRepository" class="com.java.myrotiuk.repository.pizza.InMemPizzaRepository"/> 
 		<bean id="orderRepository" class="com.java.myrotiuk.repository.order.InMemOrderRepository"/> 

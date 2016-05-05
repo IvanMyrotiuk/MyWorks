@@ -1,4 +1,4 @@
-package com.java.myrotiuk.repository.card;
+/*package com.java.myrotiuk.repository.card;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,3 +65,4 @@ public class InMemAccruedCardRepository{//implements AccruedCardRepository{
 		
 	}
 }
+*/

@@ -3,32 +3,25 @@ package com.java.myrotiuk.repository.card;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Customer;
-import com.java.myrotiuk.service.entitymanager.EntityManagerService;
 
 @Repository
+@Transactional
 public class JPAAccruedCardRepository implements AccruedCardRepository {
 
-/*	@Autowired
-	private EntityManagerService ems;
+	@PersistenceContext
+	private EntityManager em;
 	
 	@Override
-	public List<AccruedCard> getAll() {
-		EntityManager em = ems.createEntityManager();
-		em.getTransaction().begin();
-		return null;
-	}*/
-
-
-	@Override
-	public AccruedCard getAccruedCardByCustomer(Customer customer, EntityManager em) {
-		//AccruedCard accruedCard = em.
+	public AccruedCard getAccruedCardByCustomer(Customer customer) {
 		Query query = em.createQuery("select c from AccruedCard c where c.customer = :customer");
 		query.setParameter("customer", customer);
 		List<AccruedCard> accCard = query.getResultList();
@@ -41,35 +34,36 @@ public class JPAAccruedCardRepository implements AccruedCardRepository {
 
 
 	@Override
-	public List<AccruedCard> getAll(EntityManager em) {
+	public List<AccruedCard> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public AccruedCard find(long id, EntityManager em) {
+	public AccruedCard find(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public long insert(AccruedCard entity, EntityManager em) {
+	public long insert(AccruedCard entity) {
+		//em.merge(entity);
 		em.persist(entity);
+		System.out.println("CAAARDDD"+entity);
 		return entity.getId();
 	}
 
 
 	@Override
-	public void delete(long id, EntityManager em) {
+	public void delete(long id) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
 	@Override
-	public void update(AccruedCard entity, EntityManager em) {
+	public void update(AccruedCard entity) {
 		em.merge(entity);
 	}
 

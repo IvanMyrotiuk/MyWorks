@@ -1,5 +1,6 @@
 package com.java.myrotiuk.domain;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -149,13 +150,16 @@ public class Order {
 	}
 
 	public double getOrderPrice() {
+		if(orderPrice == 0){
+			countOrderPrice();
+		}
 		return orderPrice;
-		//return countOrderPrice();
 	}
 
 	public double countOrderPrice() {
 		for (Pizza pizza : pizzas.keySet()) {
-			orderPrice += pizza.getPrice();
+			Integer count = pizzas.get(pizza);
+			orderPrice += pizza.getPrice() * count;
 		}
 		return orderPrice;
 	}
@@ -186,7 +190,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", address=" + address + ", pizzas=" + pizzas.keySet() + ", orderPrice=" + orderPrice
+		return "Order [id=" + id + ", address=" + address + ", pizzas=" + Arrays.asList(pizzas.keySet().toArray()) + ", orderPrice=" + orderPrice
 				+ ", orderStatus=" + orderStatus + "]";
 	}
 }

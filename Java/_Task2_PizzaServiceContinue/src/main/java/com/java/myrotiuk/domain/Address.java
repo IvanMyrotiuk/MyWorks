@@ -15,7 +15,7 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private long id;
 	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-	@JoinColumn(name = "customer_id")
+	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 	private String address;
 	private String phoneNumber;

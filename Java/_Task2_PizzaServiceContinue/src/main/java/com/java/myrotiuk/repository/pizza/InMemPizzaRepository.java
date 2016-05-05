@@ -1,4 +1,4 @@
-package com.java.myrotiuk.repository.pizza;
+/*package com.java.myrotiuk.repository.pizza;
 
 import java.util.List;
 import javax.annotation.Resource;
@@ -56,3 +56,4 @@ public class InMemPizzaRepository {// implements PizzaRepository {
 		
 	}
 }
+*/

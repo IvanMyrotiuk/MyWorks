@@ -6,14 +6,14 @@ import javax.persistence.EntityManager;
 
 public interface BaseRepository<T> {
 
-	List<T> getAll(EntityManager em);
+	List<T> getAll();
 	
-	T find(long id, EntityManager em);
+	T find(long id);
 	
-	long insert(T entity, EntityManager em);
+	long insert(T entity);
 	
-	void delete(long id, EntityManager em);
+	void delete(long id);
 	
-	void update(T entity, EntityManager em);
+	void update(T entity);
 	
 }

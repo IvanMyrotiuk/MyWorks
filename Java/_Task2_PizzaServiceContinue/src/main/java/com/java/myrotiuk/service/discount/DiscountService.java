@@ -6,6 +6,6 @@ import com.java.myrotiuk.domain.Order;
 
 public interface DiscountService {
 	
-	double getDiscount(Order order, EntityManager em);
+	double getDiscount(Order order);
 	
 }

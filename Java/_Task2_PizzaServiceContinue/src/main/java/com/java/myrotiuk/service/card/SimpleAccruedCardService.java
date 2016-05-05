@@ -23,9 +23,9 @@ public class SimpleAccruedCardService implements AccruedCardService {
 	
 	
 	@Override
-	public Optional<AccruedCard> findCardByCustomer(Customer customer, EntityManager em) {
+	public Optional<AccruedCard> findCardByCustomer(Customer customer) {
 		
-		AccruedCard accruedCard = cardRepository.getAccruedCardByCustomer(customer, em);
+		AccruedCard accruedCard = cardRepository.getAccruedCardByCustomer(customer);
 
 		if(accruedCard != null){
 			return Optional.of(accruedCard);
@@ -34,12 +34,13 @@ public class SimpleAccruedCardService implements AccruedCardService {
 		}
 	}
 	
-	public long giveCardToCustomer(Customer customer, String name,  EntityManager em){
-		return cardRepository.insert(new AccruedCard(customer, name), em);
+	public long giveCardToCustomer(Customer customer, String name){
+		System.out.println("CUSTOMERRRRERRR"+customer);
+		return cardRepository.insert(new AccruedCard(customer, name));
 	}
 	
-	public void updateCard(AccruedCard accruedCard,  EntityManager em){
-		cardRepository.update(accruedCard, em);
+	public void updateCard(AccruedCard accruedCard){
+		cardRepository.update(accruedCard);
 	}
 
 }

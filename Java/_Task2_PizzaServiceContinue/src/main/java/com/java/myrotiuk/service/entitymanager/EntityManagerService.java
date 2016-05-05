@@ -1,4 +1,4 @@
-package com.java.myrotiuk.service.entitymanager;
+/*package com.java.myrotiuk.service.entitymanager;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,3 +28,4 @@ public class EntityManagerService {
 	}
 
 }
+*/

@@ -1,7 +1,6 @@
-package com.java.myrotiuk.repository.order;
+package com.java.myrotiuk.repository.customer;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -9,34 +8,29 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.java.myrotiuk.domain.Order;
+import com.java.myrotiuk.domain.Customer;
 
 @Repository
 @Transactional
-public class JPAOrderRepository implements OrderRepository{
+public class JPACustomerRepository implements CustomerRepository {
 
 	@PersistenceContext
 	private EntityManager em;
 	
 	@Override
-	public Optional<Order> getOrder(long orderId) {
-		return Optional.of(em.find(Order.class, new Long(orderId)));
-	}
-
-	@Override
-	public List<Order> getAll() {
+	public List<Customer> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Order find(long id) {
+	public Customer find(long id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public long insert(Order entity) {
+	public long insert(Customer entity) {
 		em.persist(entity);
 		return entity.getId();
 	}
@@ -44,12 +38,13 @@ public class JPAOrderRepository implements OrderRepository{
 	@Override
 	public void delete(long id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void update(Order entity) {
-		em.merge(entity);
+	public void update(Customer entity) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

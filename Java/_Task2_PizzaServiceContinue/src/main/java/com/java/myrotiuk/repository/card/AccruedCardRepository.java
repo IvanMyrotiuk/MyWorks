@@ -9,5 +9,5 @@ import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.repository.BaseRepository;
 
 public interface AccruedCardRepository extends BaseRepository<AccruedCard>{
-	AccruedCard getAccruedCardByCustomer(Customer customer, EntityManager em);
+	AccruedCard getAccruedCardByCustomer(Customer customer);
 }

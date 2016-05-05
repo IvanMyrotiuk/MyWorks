@@ -2,8 +2,6 @@ package com.java.myrotiuk.service.discount;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +19,9 @@ public class SimpleDiscountService implements DiscountService {
 	}
 
 	@Override
-	public double getDiscount(Order order, EntityManager em) {
+	public double getDiscount(Order order) {
 		double resultDiscount = 0;
-		List<Discount> discounts = discountProvider.provideDiscounts(order, em);
+		List<Discount> discounts = discountProvider.provideDiscounts(order);
 		for (Discount discount : discounts) {
 			if (discount.isApplicable()) {
 				resultDiscount += discount.countDiscount();

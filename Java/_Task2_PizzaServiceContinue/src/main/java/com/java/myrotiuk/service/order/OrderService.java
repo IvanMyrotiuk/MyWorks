@@ -1,7 +1,5 @@
 package com.java.myrotiuk.service.order;
 
-import javax.persistence.EntityManager;
-
 import com.java.myrotiuk.domain.Address;
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
@@ -15,6 +13,6 @@ public interface OrderService {
 	boolean addPizzaToOrder(long orderId, Integer... pizzasID);
 	boolean changeOrderDeletePizza(int orderId, Integer... pizzasID);
 	
-	long awardCard(Customer customer, String name, EntityManager em);
+	long awardCard(Customer customer, String name);
 
 }
