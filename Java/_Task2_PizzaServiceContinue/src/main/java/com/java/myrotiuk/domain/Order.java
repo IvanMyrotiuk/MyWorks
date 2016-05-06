@@ -11,6 +11,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class Order {
 	@JoinColumn(name = "address_id")
 	private Address address;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	//@JoinTable(name = "Order_Pizza",joinColumns = {@JoinColumn(name = "Order_id")})
 	@CollectionTable(name = "Order_Pizza", joinColumns = {@JoinColumn(name = "Order_id")})
 	@MapKeyJoinColumn(name = "Pizza_id")

@@ -9,6 +9,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.java.myrotiuk.domain.Address;
+import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
 
 @Repository
@@ -38,7 +40,12 @@ public class JPAOrderRepository implements OrderRepository{
 
 	@Override
 	public long insert(Order entity) {
-		em.merge(entity);
+		Address address = entity.getAddress();
+		if(address.getId() != 0){
+			Address managedAddress = em.merge(address);
+			entity.setAddress(managedAddress);
+		}
+		em.persist(entity);
 		return entity.getId();
 	}
 

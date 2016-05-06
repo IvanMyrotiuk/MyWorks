@@ -13,7 +13,7 @@
 
 	<context:component-scan base-package="com.java.myrotiuk.repository" />
 	
-	<context:property-placeholder system-properties-mode="NEVER" location="classpath:jdbc.properties"/><!-- system-properties-mode="OVERRIDE" -->
+	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:jdbc.properties"/>
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
           destroy-method="close">

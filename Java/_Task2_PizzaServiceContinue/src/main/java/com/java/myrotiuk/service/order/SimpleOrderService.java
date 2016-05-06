@@ -20,7 +20,7 @@ import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.exception.StatusOrderException;
 import com.java.myrotiuk.exception.WrongIdOfOrderException;
 import com.java.myrotiuk.infrustructure.BenchMark;
-
+import com.java.myrotiuk.repository.address.AddressRepository;
 import com.java.myrotiuk.repository.customer.CustomerRepository;
 
 import com.java.myrotiuk.repository.order.OrderRepository;
@@ -36,6 +36,7 @@ import com.java.myrotiuk.service.discount.SimpleDiscountService;
 @Service// ("orderService")
 public class SimpleOrderService implements OrderService {
 	
+	private AddressRepository addressRepository;
 	private CustomerRepository customerRepository; 
 	private PizzaRepository pizzaRepository; 
 	private OrderRepository orderRepository; 
@@ -43,8 +44,9 @@ public class SimpleOrderService implements OrderService {
 	private DiscountService discountService; 
 
 	@Autowired
-	public SimpleOrderService(CustomerRepository customerRepository, PizzaRepository pizzaRepositoryy, OrderRepository orderRepository,
-			AccruedCardService cardService, DiscountService discountService) {
+	public SimpleOrderService(AddressRepository addressRepository, CustomerRepository customerRepository, PizzaRepository pizzaRepositoryy, 
+			OrderRepository orderRepository, AccruedCardService cardService, DiscountService discountService) {
+		this.addressRepository = addressRepository;
 		this.customerRepository = customerRepository;
 		this.pizzaRepository = pizzaRepositoryy;
 		this.orderRepository = orderRepository;
@@ -58,7 +60,8 @@ public class SimpleOrderService implements OrderService {
 		int countPizzas = pizzasID.length;
 		if (countPizzas > 0 && countPizzas <= 10) {
 
-			customerRepository.insert(address.getCustomer());
+			//customerRepository.insert(address.getCustomer());
+			addressRepository.insert(address);
 			System.out.println("IDDDDDDDDDD"+ address.getCustomer().getId());
 			awardCard(address.getCustomer(),"accrued card");
 
@@ -161,7 +164,7 @@ public class SimpleOrderService implements OrderService {
 			if (countPizzas > 0 && countFinalPizzas <= 10 && order.getOrderStatus() == OrderStatus.NEW) {
 				List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
 				order.addPizzas(pizzas);
-				orderRepository.insert(order);
+				orderRepository.update(order);
 				return true;
 			}
 		}

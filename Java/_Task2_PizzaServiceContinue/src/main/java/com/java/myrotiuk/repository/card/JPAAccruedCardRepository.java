@@ -49,12 +49,12 @@ public class JPAAccruedCardRepository implements AccruedCardRepository {
 
 	@Override
 	public long insert(AccruedCard entity) {
-		//em.find(Customer.class, entity.getCustomer().getId());
-//		Customer customer = entity.getCustomer();
-//		em.merge(customer);
-//		entity.setCustomer(customer);
+		Customer customer = entity.getCustomer(); 
+		if(customer.getId() != 0){
+			Customer managedCustomer = em.merge(customer);
+			entity.setCustomer(managedCustomer);
+		}
 		em.persist(entity);
-		System.out.println("CAAARDDD"+entity);
 		return entity.getId();
 	}
 
