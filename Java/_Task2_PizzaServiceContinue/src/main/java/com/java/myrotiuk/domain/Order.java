@@ -1,6 +1,7 @@
 package com.java.myrotiuk.domain;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -116,11 +117,19 @@ public class Order {
 		if (this.getOrderStatus() == OrderStatus.NEW ) {
 
 			for(Integer id: pizzasID){
-				for(Pizza p : pizzas.keySet()){
-					if(p.getId() == id){
-						pizzas.remove(p);
+				Iterator<Pizza> iter = pizzas.keySet().iterator();
+				while(iter.hasNext()){
+					Pizza pizzaToDelete = iter.next();
+					if(pizzaToDelete.getId() == id){
+						iter.remove();
 					}
 				}
+//				for(Pizza p : pizzas.keySet()){
+//					if(p.getId() == id){
+//						pizzas.remove(p);
+//						continue;
+//					}
+//				}//CurrentModificationCollection
 			}
 			return true;
 		}

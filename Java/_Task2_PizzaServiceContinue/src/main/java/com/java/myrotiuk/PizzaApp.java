@@ -14,7 +14,7 @@ public class PizzaApp {
 
 		//EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa");
 		
-		Address address = new Address(new Customer("John"),"Beverly Hills", "7777-777-77");
+		Address address = new Address(new Customer("John"),"Beverly Hills 17", "7777-777-77");
 		//Customer customer = new Customer("John", new Address("Beverly Hills", "7777-777-77"));
 		Order order;
 		
@@ -51,13 +51,13 @@ public class PizzaApp {
 		OrderService orderService = appContext.getBean(OrderService.class);
 		order = orderService.placeNewOrder(address, 1, 2, 3);
 		orderService.addPizzaToOrder(order.getId(), 2,2,2);
+		//orderService.cancelOrder(order.getId());
+		orderService.changeOrderDeletePizza(order.getId(), 2, 3);
 		orderService.processOrder(order.getId());
 		order = orderService.completeOrder(order.getId());
 		System.out.println(order);
 		System.out.println(orderService.getClass().getName());
-		
 		appContext.close();
-		
 	}
 
 }

@@ -9,4 +9,5 @@ import com.java.myrotiuk.repository.BaseRepository;
 
 public interface OrderRepository extends BaseRepository<Order>{
 	Optional<Order> getOrder(long orderId);
+	//void deletePizzasForCurrentIdInOrder();
 }

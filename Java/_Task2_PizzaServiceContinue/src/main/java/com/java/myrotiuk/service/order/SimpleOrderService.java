@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Address;
@@ -55,6 +56,7 @@ public class SimpleOrderService implements OrderService {
 	}
 
 	@BenchMark
+	@Transactional
 	public Order placeNewOrder(Address address, Integer... pizzasID) {
 
 		int countPizzas = pizzasID.length;
@@ -171,11 +173,13 @@ public class SimpleOrderService implements OrderService {
 		return false;
 	}
 
-	public boolean changeOrderDeletePizza(int orderId, Integer... pizzasID) {
+	public boolean changeOrderDeletePizza(long orderId, Integer... pizzasID) {
 		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
 		if (currentOrder.isPresent()) {
 			Order order = currentOrder.get();
-			return order.changeOrderDeletePizza(pizzasID);
+			boolean changed = order.changeOrderDeletePizza(pizzasID);
+			orderRepository.update(order);
+			return changed;
 		}
 		return false;
 	}

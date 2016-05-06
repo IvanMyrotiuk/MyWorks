@@ -11,7 +11,7 @@ public interface OrderService {
 	Order completeOrder(long orderId);
 	Order cancelOrder(long orderId);
 	boolean addPizzaToOrder(long orderId, Integer... pizzasID);
-	boolean changeOrderDeletePizza(int orderId, Integer... pizzasID);
+	boolean changeOrderDeletePizza(long orderId, Integer... pizzasID);
 	
 	long awardCard(Customer customer, String name);
 
