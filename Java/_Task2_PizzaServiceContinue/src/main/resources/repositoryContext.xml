@@ -3,26 +3,20 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xsi:schemaLocation=
 	"http://www.springframework.org/schema/beans
 	 http://www.springframework.org/schema/beans/spring-beans.xsd
 	 http://www.springframework.org/schema/context
 	 http://www.springframework.org/schema/context/spring-context.xsd
 	 http://www.springframework.org/schema/tx
-     http://www.springframework.org/schema/tx/spring-tx.xsd">
+     http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/jdbc
+     http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 	<context:component-scan base-package="com.java.myrotiuk.repository" />
 	
-	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:jdbc.properties"/>
-	
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
-          destroy-method="close">
-        <property name="driverClassName" value="${driver}"/>        
-        <property name="url" value="${url}"/>        
-        <property name="username" value="${user}"/>        
-        <property name="password" value="${password}"/> 
-        <property name="initialSize" value="5"/>       
-    </bean>
+	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:jdbc.properties"/> 
 	
 	 <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -34,7 +28,7 @@
         <property name="packagesToScan" value="com.java.myrotiuk.domain"/>
         <property name="jpaProperties">
             <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.dialect">${dialect}</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hbm2ddl.auto}</prop>
                 <prop key="hibernate.show_sql">${show_sql}</prop>
                 <prop key="hibernate.format_sql">${format_sql}</prop>
@@ -51,6 +45,28 @@
 	
 	<bean class="com.java.myrotiuk.infrustructure.BenchMarkProxyBeanPostProcessor" />
 	
+	<beans profile="prod">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
+          destroy-method="close">
+        <property name="driverClassName" value="${driver}"/>        
+        <property name="url" value="${url}"/>        
+        <property name="username" value="${user}"/>        
+        <property name="password" value="${password}"/> 
+        <property name="initialSize" value="5"/>       
+    </bean>
+    </beans>
+    
+    <beans profile="dev">
+  
+    	<jdbc:embedded-database id="dataSource" type="H2">
+    	<!-- <jdbc:script location="classpath:META-INF/sql/schema.sql"/>
+    	    <jdbc:script location="classpath:META-INF/sql/test-data.sql"/> -->
+    	</jdbc:embedded-database>
+	</beans>
+	
+	<beans>
+	 
+	</beans>
 	
 	<!-- <context:component-scan base-package="com.java.myrotiuk.configuration" /> -->
 

@@ -178,7 +178,7 @@ public class Order {
 		this.orderStatus = status;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -198,9 +198,46 @@ public class Order {
 		this.address = address;
 	}
 
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((pizzas == null) ? 0 : pizzas.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Order other = (Order) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (id != other.id)
+			return false;
+		if (pizzas == null) {
+			if (other.pizzas != null)
+				return false;
+		} else if (!pizzas.equals(other.pizzas))
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", address=" + address + ", pizzas=" + Arrays.asList(pizzas.keySet().toArray()) + ", orderPrice=" + orderPrice
+		return "Order [id=" + id + ", address=" + address + ", pizzas=" + Arrays.asList(pizzas.keySet().toArray()) 
+		+ " count respectively: "+Arrays.asList(pizzas.values().toArray()) + ", orderPrice=" + orderPrice 
 				+ ", orderStatus=" + orderStatus + "]";
 	}
 }

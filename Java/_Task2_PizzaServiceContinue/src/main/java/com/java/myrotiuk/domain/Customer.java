@@ -9,10 +9,11 @@ import javax.persistence.Id;
 public class Customer {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String name;
-	private String login;
+	private String email;
+	private String password;
 	
 	public Customer() {
 	}
@@ -33,9 +34,21 @@ public class Customer {
 		this.name = name;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", login=" +  login+"]";
+		return "Customer [id=" + id + ", name=" + name + ", email=" +  email+"]";
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 }

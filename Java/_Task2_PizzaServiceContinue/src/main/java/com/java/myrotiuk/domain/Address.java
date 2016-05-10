@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 public class Address {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name = "customer_id", nullable = false)
@@ -56,10 +56,38 @@ public class Address {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Address other = (Address) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
 		return "Address [id=" + id + ", customer=" + customer + ", address=" + address + ", phoneNumber=" + phoneNumber
 				+ "]";
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }

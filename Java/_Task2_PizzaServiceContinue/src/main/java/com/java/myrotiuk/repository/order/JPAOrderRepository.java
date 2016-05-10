@@ -22,8 +22,7 @@ public class JPAOrderRepository implements OrderRepository{
 	
 	@Override
 	public Optional<Order> getOrder(long orderId) {
-		System.out.println("Order id To get!!!!!!!!!!"+orderId);
-		return Optional.of(em.find(Order.class, new Long(orderId)));
+		return Optional.ofNullable(em.find(Order.class, new Long(orderId)));
 	}
 
 	@Override
@@ -52,12 +51,10 @@ public class JPAOrderRepository implements OrderRepository{
 	@Override
 	public void delete(long id) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void update(Order entity) {
 		em.merge(entity);
 	}
-
 }

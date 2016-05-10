@@ -22,8 +22,9 @@ public class JPAAccruedCardRepository implements AccruedCardRepository {
 	
 	@Override
 	public AccruedCard getAccruedCardByCustomer(Customer customer) {
-		Query query = em.createQuery("select c from AccruedCard c where c.customer = :customer");
+		Query query = em.createQuery("select c from AccruedCard c where c.customer = :customer");//:customer//.id = ?1
 		query.setParameter("customer", customer);
+		//query.setParameter(1, customer.getId());
 		List<AccruedCard> accCard = query.getResultList();
 		if(accCard.isEmpty()){
 			return null;

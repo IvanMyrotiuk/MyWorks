@@ -18,8 +18,9 @@ public class PizzaApp {
 		//Customer customer = new Customer("John", new Address("Beverly Hills", "7777-777-77"));
 		Order order;
 		
-		ConfigurableApplicationContext repositoryContext = new ClassPathXmlApplicationContext("repositoryContext.xml");
-		
+		ConfigurableApplicationContext repositoryContext = new ClassPathXmlApplicationContext(new String[]{"repositoryContext.xml"}, false);//"repositoryContext.xml");
+		repositoryContext.getEnvironment().setActiveProfiles("prod");
+		repositoryContext.refresh();
 		ConfigurableApplicationContext appContext = new ClassPathXmlApplicationContext(new String[]{"appContext.xml"}, false);
 		
 		appContext.setParent(repositoryContext);

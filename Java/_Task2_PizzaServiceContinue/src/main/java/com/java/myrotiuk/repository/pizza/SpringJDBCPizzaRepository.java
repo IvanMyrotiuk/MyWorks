@@ -1,4 +1,4 @@
-/*package com.java.myrotiuk.repository.pizza;
+package com.java.myrotiuk.repository.pizza;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -80,4 +80,3 @@ public class SpringJDBCPizzaRepository{// implements PizzaRepository {
 	}
 
 }
-*/

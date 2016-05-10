@@ -16,36 +16,17 @@
         http://www.springframework.org/schema/jdbc/spring-jdbc.xsd"
         >
     
-    <context:component-scan base-package="com.java.myrotiuk.repository" />
-     
-    <jdbc:embedded-database id="dataSource" type="H2">
-<!--        <jdbc:script location="classpath:META-INF/sql/schema.sql"/>
-        <jdbc:script location="classpath:META-INF/sql/test-data.sql"/>-->
-    </jdbc:embedded-database>
-    
-    <bean id="entityManagerFactory"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <!-- <property name="persistenceUnitName" value="HiberanteMySQL" /> -->
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-        </property>
-        <property name="packagesToScan" value="com.java.myrotiuk.domain"/>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
-                <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.format_sql">true</prop>
-            </props>
-        </property>
-    </bean>
-    
-    <bean id="transactionManager" 
-          class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory" />
-    </bean>
-    
-    <tx:annotation-driven transaction-manager="transactionManager" />
+  <!--   <beans profile="dev" > -->
+   <!--  </beans>  -->
+    	<!-- <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:jdbc.properties"/> --> 
+    	
+     	<jdbc:embedded-database id="dataSource" type="H2"> <!-- primary="true" -->
+	       <!-- <jdbc:script location="classpath:META-INF/sql/schema.sql"/>
+    	    <jdbc:script location="classpath:META-INF/sql/test-data.sql"/> -->
+   		 </jdbc:embedded-database>
+   
+         <!-- <bean id = "dataSource" class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean" primary="true">
+      	<property name="databaseType" value="H2"/>
+      </bean> -->
     
 </beans>
