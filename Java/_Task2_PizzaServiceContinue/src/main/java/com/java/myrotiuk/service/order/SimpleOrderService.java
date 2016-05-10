@@ -126,7 +126,7 @@ public class SimpleOrderService implements OrderService {
 					accruedCard.setAmount(accruedCard.getAmount() + priceAfterDiscount);
 					cardService.updateCard(accruedCard);
 				} else {
-					customerService.giveInCardToCastemer(address.getCustomer(), "Accrued card");
+					customerService.giveInCardToCustomer(address.getCustomer(), "Accrued card");
 				}
 				return completedOrder.getOrderPrice();
 			} else {

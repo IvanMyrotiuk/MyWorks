@@ -67,9 +67,8 @@ public class SimpleCustomerService implements CustomerService{
 		return id;
 	}
 	
-	
 	@Override
-	public long giveInCardToCastemer(Customer customer, String nameOfCard) {
+	public long giveInCardToCustomer(Customer customer, String nameOfCard) {
 		return cardService.awardCard(customer, nameOfCard);
 	}
 
@@ -83,6 +82,4 @@ public class SimpleCustomerService implements CustomerService{
 		return addressRepository.find(id_address);
 	}
 	
-	
-
 }

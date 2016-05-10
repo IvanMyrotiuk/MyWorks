@@ -13,7 +13,9 @@ public interface CustomerService {
 	
 	long addAddress(Customer customer, String userAddress, String userPhone);
 	
-	long giveInCardToCastemer(Customer customer, String nameOfCard);
+	long giveInCardToCustomer(Customer customer, String nameOfCard);
 	
 	List<Address> getAllAddressByCustomer(Customer customer);
+	
+	Address chooseDeliveryAddress(long id_address);
 }
