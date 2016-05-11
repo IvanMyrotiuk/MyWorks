@@ -1,6 +1,7 @@
 package com.java.myrotiuk.service.order;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class SimpleOrderService implements OrderService {
 		if (countPizzas > 0 && countPizzas <= 10) {
 
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
+			//System.out.println(pizzas);
 			Map<Pizza, Integer> pizzasQuantity = new HashMap<>();
 			for (Pizza p : pizzas) {
 				if (pizzasQuantity.containsKey(p)) {

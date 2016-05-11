@@ -12,16 +12,18 @@ public class DiscountForMoreThen4Pizzas implements Discount {
 	private final static double DISCOUNT = 0.3d;
 
 	private Set<Pizza> pizzas;
+	private int countPizzas;
 	
-	public DiscountForMoreThen4Pizzas(Set<Pizza> pizzas){
+	public DiscountForMoreThen4Pizzas(Set<Pizza> pizzas, int countPizzas){
 		if(pizzas == null){
 			throw new IllegalArgumentException();
 		}
 		this.pizzas = pizzas;
+		this.countPizzas = countPizzas;
 	}
 	
 	public boolean isApplicable() {
-		return pizzas.size() > 4;
+		return countPizzas > 4;
 	}
 
 	@Override

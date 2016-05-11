@@ -39,7 +39,11 @@ public class DiscountProvider {
 	}
 
 	DiscountForMoreThen4Pizzas createDiscountForMoreThen4Pizzas(Map<Pizza, Integer> pizzas) {
-		return new DiscountForMoreThen4Pizzas(pizzas.keySet());
+		int allPizzasCount = 0;
+		for(Pizza pizza : pizzas.keySet()){
+			allPizzasCount += pizzas.get(pizza);
+		}
+		return new DiscountForMoreThen4Pizzas(pizzas.keySet(), allPizzasCount);
 	}
 	
 }
