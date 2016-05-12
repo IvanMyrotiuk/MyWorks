@@ -12,5 +12,5 @@ public interface OrderService {
 	Order cancelOrder(long orderId);
 	boolean addPizzaToOrder(long orderId, Integer... pizzasID);
 	boolean changeOrderDeletePizza(long orderId, Integer... pizzasID);
-
+	double pay(long id_order);
 }

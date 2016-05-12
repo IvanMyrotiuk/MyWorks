@@ -20,6 +20,7 @@ import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Address;
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.domain.Order;
+import com.java.myrotiuk.domain.Order.OrderStatus;
 import com.java.myrotiuk.domain.Pizza;
 import com.java.myrotiuk.domain.Pizza.Type;
 import com.java.myrotiuk.service.discount.DiscountService;
@@ -67,6 +68,7 @@ public class SimpleDiscountServiceTest {
 		Order order = new Order();
 		order.setAddress(address);
 		order.setPizzas(pizzas);
+		order.setOrderStatus(OrderStatus.DONE);
 		
 		double resultDiscount = discountService.getDiscount(order);
 		

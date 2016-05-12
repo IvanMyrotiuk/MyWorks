@@ -9,7 +9,7 @@ public interface CustomerService {
 	
 	Customer login(String userEmail, String password);
 	
-	void singUp(String userName, String userEmail, String userAddress, String userPhone);//, String userPassword, String userCheckPassword,
+	Address singUp(String userName, String userEmail, String userAddress, String userPhone);//, String userPassword, String userCheckPassword,
 	
 	long addAddress(Customer customer, String userAddress, String userPhone);
 	

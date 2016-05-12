@@ -28,7 +28,6 @@ public class DiscountFromAccruedCard implements Discount {
 		AccruedCard accCard = accruedCard.get();
 		double orderPriceDiscount =orderPrice * DISCOUNT_FROM_ORDER_PRICE;
 		double cardDiscount = accCard.getAmount() * DISCOUNT_FROM_CARD;
-		//optionalAccruedCard = Optional.empty();
 		if (cardDiscount > orderPriceDiscount) {
 			return orderPriceDiscount;
 		}

@@ -124,20 +124,13 @@ public class Order {
 						iter.remove();
 					}
 				}
-//				for(Pizza p : pizzas.keySet()){
-//					if(p.getId() == id){
-//						pizzas.remove(p);
-//						continue;
-//					}
-//				}//CurrentModificationCollection
 			}
 			return true;
 		}
 		return false;
 	}
 
-	public boolean addPizzas(List<Pizza> additionalPizzas) {
-		if (this.pizzas.size() + additionalPizzas.size() <= 10 && this.getOrderStatus() == OrderStatus.NEW) {
+	public void addPizzas(List<Pizza> additionalPizzas) {
 			for(Pizza p : additionalPizzas){
 				Integer count = pizzas.get(p);
 				if(count == null){
@@ -146,11 +139,17 @@ public class Order {
 					pizzas.put(p, count + 1);
 				}
 			}
-			return true;
-		}
-		return false;
 	}
 
+	public int sizeOrder(){
+		int q = 0;
+		for(Pizza p:pizzas.keySet()){
+			Integer n = pizzas.get(p);
+			q += n;
+		}
+		return q;
+	}
+	
 	public OrderStatus getOrderStatus() {
 		return orderStatus;
 	}
@@ -160,7 +159,7 @@ public class Order {
 	}
 
 	public double getOrderPrice() {
-		if(orderPrice == 0){
+		if(orderPrice == 0 && this.orderStatus == OrderStatus.DONE){
 			countOrderPrice();
 		}
 		return orderPrice;

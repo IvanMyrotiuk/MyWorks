@@ -3,13 +3,17 @@ package com.java.myrotiuk.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,25 +25,19 @@ import com.java.myrotiuk.exception.StatusOrderException;
 public class OrderTest {
 
 	private Order order;
-	private Customer customer;
+	private Address address;
 	
 	@Before
 	public void setUp() throws Exception {
-		List<Pizza> pizzas = new ArrayList<>();
 		
-		pizzas.add(new Pizza(1,"Good day", 100, Type.SEA));
-		pizzas.add(new Pizza(2,"Blue sky", 200, Type.MEAT));
-		pizzas.add(new Pizza(3,"Woterfall", 255, Type.VEGETERIAN));
-		pizzas.add(new Pizza(4,"Woterfall2", 300, Type.VEGETERIAN));
-		pizzas.add(new Pizza(5,"Woterfall3", 250, Type.VEGETERIAN));
-		customer = mock(Customer.class);
-		this.order = new Order(customer, pizzas);
+		Map<Pizza, Integer> pizzas = mock(Map.class);
+		this.order = new Order();
+		order.setAddress(address);
+		order.setPizzas(pizzas);
 	}
 
 	@Test
 	public void shoulrReturnOrderWithInProgressStatus() {
-		List<Pizza> pizzas = mock(List.class);
-		this.order = new Order(customer, pizzas);
 		Order orderToCheck = order.next();
 		OrderStatus orderStatus = orderToCheck.getOrderStatus();
 		assertEquals(OrderStatus.IN_PROGRESS, orderStatus); 
@@ -47,8 +45,6 @@ public class OrderTest {
 	
 	@Test
 	public void shoulrReturnOrderWithCanceledStatus() {
-		List<Pizza> pizzas = mock(List.class);
-		this.order = new Order(customer, pizzas);
 		Order orderToCheck = order.cancel();
 		OrderStatus orderStatus = orderToCheck.getOrderStatus();
 		assertEquals(OrderStatus.CANCELED, orderStatus); 
@@ -100,18 +96,14 @@ public class OrderTest {
 	
 	@Test
 	public void shouldReturnFalseForChangingOrderDeletingPizzaAsStatusInProggress(){
-		List<Pizza> pizzas = mock(List.class);
-		this.order = new Order(customer, pizzas);
-		Order spyOrder = spy(order);
-		when(spyOrder.getOrderStatus()).thenReturn(OrderStatus.IN_PROGRESS);
-		boolean result = spyOrder.changeOrderDeletePizza(1,2,3);
+		order.setOrderStatus(OrderStatus.IN_PROGRESS);
+		boolean result = order.changeOrderDeletePizza(1,2,3);
 		assertFalse(result);
 	}
 	
 	@Test
 	public void shouldReturnFalseForChangingOrderDeletingPizzaAsStatusCanceled(){
-		List<Pizza> pizzas = mock(List.class);
-		this.order = new Order(customer, pizzas);
+		
 		Order spyOrder = spy(order);
 		when(spyOrder.getOrderStatus()).thenReturn(OrderStatus.CANCELED);
 		boolean result = spyOrder.changeOrderDeletePizza(1,2,3);
@@ -126,58 +118,82 @@ public class OrderTest {
 	}
 	
 	@Test
-	public void shouldReturnListWithout2and3Elements(){
+	public void shouldDeleteAllPizzasInOrderBySpecificId(){
+		Map<Pizza, Integer> pizzas = new HashMap<>();
+
+		Pizza pizza = new Pizza(1,"Good day", 100, Type.SEA);
+		pizzas.put(pizza, 1);
+		Pizza pizza2 = new Pizza(2,"Blue sky", 200, Type.MEAT);
+		pizzas.put(pizza2, 1);
+		Pizza pizza3 = new Pizza(3,"Woterfall", 255, Type.VEGETERIAN);
+		pizzas.put(pizza3, 3);
+		Pizza pizza4 = new Pizza(4,"Woterfall2", 300, Type.VEGETERIAN);
+		pizzas.put(pizza4, 1);
+		Pizza pizza5 = new Pizza(5,"Woterfall3", 250, Type.VEGETERIAN);
+		pizzas.put(pizza5, 2);
+		
+		order.setPizzas(pizzas);
+		
 		order.changeOrderDeletePizza(2,3);
-		List<Pizza> changedPizzas = order.getPizzas();
 		
-		assertArrayEquals(new Integer[]{
-				1,
-				4,
-				5
-		}, new Integer[]{
-				changedPizzas.get(0).getId(),
-				changedPizzas.get(1).getId(),
-				changedPizzas.get(2).getId()
-		});
+		Map<Pizza, Integer> changedPizzas = order.getPizzas();
+		
+		assertEquals(pizzas.get(pizza), new Integer(1));
+		assertNull(pizzas.get(pizza2));
+		assertNull(pizzas.get(pizza3));
+		assertEquals(pizzas.get(pizza4), new Integer(1));
+		assertEquals(pizzas.get(pizza5), new Integer(2));
 	}
 	
 	@Test
-	public void shouldReturnFalsAsWeAddMoreAdditionPizzasResultOrderShouldHaveFrom0To10Pizzas(){
-		List<Pizza> pizzas = mock(List.class);
-		this.order = new Order(customer, pizzas);
-		List<Pizza> pizzasToAdd = mock(List.class);
+	public void testAddPizzaToOrder(){
+		Map<Pizza, Integer> pizzas = new HashMap<>();
+		Pizza pizza = new Pizza(1,"Good day", 100, Type.SEA);
+		pizzas.put(pizza, 1);
+		Pizza pizza2 = new Pizza(2,"Blue sky", 200, Type.MEAT);
+		pizzas.put(pizza2, 1);
+		Pizza pizza3 = new Pizza(3,"Woterfall", 255, Type.VEGETERIAN);
+		pizzas.put(pizza3, 3);
+		Pizza pizza4 = new Pizza(4,"Woterfall2", 300, Type.VEGETERIAN);
+		pizzas.put(pizza4, 1);
+		Pizza pizza5 = new Pizza(5,"Woterfall3", 250, Type.VEGETERIAN);
+		pizzas.put(pizza5, 2);
+		order.setPizzas(pizzas);
+		order.addPizzas(Arrays.asList(pizza, pizza2, pizza3, pizza4));
 		
-		when(pizzas.size()).thenReturn(5);
-		when(pizzasToAdd.size()).thenReturn(7);
-		
-		boolean result = order.addPizzas(pizzasToAdd);
-		assertFalse(result);
-	}
-	
-	@Test
-	public void shouldReturnTrueAsWeAddPermitAmoutOfPizzasResultOrderShouldHaveFrom0To10Pizzas(){
-		List<Pizza> pizzas = mock(List.class);
-		this.order = new Order(customer, pizzas);
-		List<Pizza> pizzasToAdd = mock(List.class);
-		
-		when(pizzas.size()).thenReturn(5);
-		when(pizzasToAdd.size()).thenReturn(3);
-		
-		boolean result = order.addPizzas(pizzasToAdd);
-		assertTrue(result);
+		assertEquals(pizzas.get(pizza), new Integer(2));
+		assertEquals(pizzas.get(pizza2), new Integer(2));
+		assertEquals(pizzas.get(pizza3), new Integer(4));
+		assertEquals(pizzas.get(pizza4), new Integer(2));
+		assertEquals(pizzas.get(pizza5), new Integer(2));
 	}
 
 	@Test
 	public void shouldReturn0AsAPriceBecauseOfEmptyListOfPizzas(){
-		List<Pizza> pizzas = new ArrayList<>();
-		this.order = new Order(customer, pizzas);
 		double result = order.countOrderPrice();
 		assertEquals(0.0, result, 0);
 	}
 	
 	@Test
 	public void shouldReturnSumOfPricePizzas(){
+		Map<Pizza, Integer> pizzas = new HashMap<>();
+		
+		
+		
+		Pizza pizza = new Pizza(1,"Good day", 100, Type.SEA);
+		pizzas.put(pizza, 1);
+		Pizza pizza2 = new Pizza(2,"Blue sky", 200, Type.MEAT);
+		pizzas.put(pizza2, 1);
+		Pizza pizza3 = new Pizza(3,"Woterfall", 255, Type.VEGETERIAN);
+		pizzas.put(pizza3, 1);
+		Pizza pizza4 = new Pizza(4,"Woterfall2", 300, Type.VEGETERIAN);
+		pizzas.put(pizza4, 1);
+		Pizza pizza5 = new Pizza(5,"Woterfall3", 250, Type.VEGETERIAN);
+		pizzas.put(pizza5, 2);
+		
+		order.setPizzas(pizzas);
+		order.setOrderStatus(OrderStatus.DONE);
 		double result = order.countOrderPrice();
-		assertEquals(1105.0, result, 0);
+		assertEquals(1355.0, result, 0);
 	}
 }

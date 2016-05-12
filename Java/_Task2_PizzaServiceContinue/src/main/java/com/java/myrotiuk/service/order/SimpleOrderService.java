@@ -38,11 +38,12 @@ public class SimpleOrderService implements OrderService {
 
 	@Autowired
 	public SimpleOrderService(PizzaRepository pizzaRepositoryy, OrderRepository orderRepository,
-			AccruedCardService cardService, DiscountService discountService) {
+			AccruedCardService cardService, DiscountService discountService, CustomerService customerService) {
 		this.pizzaRepository = pizzaRepositoryy;
 		this.orderRepository = orderRepository;
 		this.cardService = cardService;
 		this.discountService = discountService;
+		this.customerService = customerService;
 	}
 
 	@BenchMark
@@ -53,7 +54,6 @@ public class SimpleOrderService implements OrderService {
 		if (countPizzas > 0 && countPizzas <= 10) {
 
 			List<Pizza> pizzas = pizzasByArrOfId(pizzasID);
-			//System.out.println(pizzas);
 			Map<Pizza, Integer> pizzasQuantity = new HashMap<>();
 			for (Pizza p : pizzas) {
 				if (pizzasQuantity.containsKey(p)) {
@@ -157,7 +157,7 @@ public class SimpleOrderService implements OrderService {
 		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
 		if (currentOrder.isPresent()) {
 			Order order = currentOrder.get();
-			int countOldPizzas = order.getPizzas().size();
+			int countOldPizzas = order.sizeOrder();
 			int countPizzas = pizzasID.length;
 			int countFinalPizzas = countOldPizzas + countPizzas;
 			if (countPizzas > 0 && countFinalPizzas <= 10 && order.getOrderStatus() == OrderStatus.NEW) {
@@ -174,6 +174,7 @@ public class SimpleOrderService implements OrderService {
 		Optional<Order> currentOrder = orderRepository.getOrder(orderId);
 		if (currentOrder.isPresent()) {
 			Order order = currentOrder.get();
+			
 			boolean changed = order.changeOrderDeletePizza(pizzasID);
 			orderRepository.update(order);
 			return changed;

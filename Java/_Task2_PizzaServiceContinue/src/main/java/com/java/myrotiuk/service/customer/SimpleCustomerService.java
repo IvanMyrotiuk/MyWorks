@@ -40,12 +40,13 @@ public class SimpleCustomerService implements CustomerService{
 	}
 
 	@Override
-	public void singUp(String userName, String userEmail, String userAddress, String userPhone ) {//, String userPassword, String userCheckPassword,
+	public Address singUp(String userName, String userEmail, String userAddress, String userPhone ) {//, String userPassword, String userCheckPassword,
 		if(!checkIfEmailExist(userEmail)){
 			Customer customer = new Customer(userName);
 			customer.setEmail(userEmail);//password
 			Address address = new Address(customer, userAddress, userPhone);
 			addressRepository.insert(address);
+			return address;
 		}else{
 			throw new IllegalArgumentException("User with such email exist");
 		}

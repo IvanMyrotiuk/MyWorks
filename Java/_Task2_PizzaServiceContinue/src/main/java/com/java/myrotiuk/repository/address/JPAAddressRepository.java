@@ -32,6 +32,7 @@ public class JPAAddressRepository implements AddressRepository {
 
 	@Override
 	public long insert(Address entity) {
+		//System.out.println("EEEEEEEEE"+entity);
 		em.persist(entity);
 		return entity.getId();
 	}

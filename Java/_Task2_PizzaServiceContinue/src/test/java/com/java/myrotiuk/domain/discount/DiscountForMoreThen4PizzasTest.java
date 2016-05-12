@@ -8,7 +8,9 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.java.myrotiuk.domain.Order;
 import com.java.myrotiuk.domain.Pizza;
@@ -21,15 +23,15 @@ public class DiscountForMoreThen4PizzasTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		List<Pizza> pizzas = new ArrayList<>();
+		Set<Pizza> pizzas = new HashSet<>();
 		
-		pizzas.add(new Pizza("Good day", 100, Type.SEA));
-		pizzas.add(new Pizza("Blue sky", 200, Type.MEAT));
-		pizzas.add(new Pizza("Woterfall", 255, Type.VEGETERIAN));
-		pizzas.add(new Pizza("Woterfall", 300, Type.VEGETERIAN));
-		pizzas.add(new Pizza("Woterfall", 250, Type.VEGETERIAN));
+		pizzas.add(new Pizza(1,"Good day", 100, Type.SEA));
+		pizzas.add(new Pizza(2,"Blue sky", 200, Type.MEAT));
+		pizzas.add(new Pizza(3,"Woterfall", 255, Type.VEGETERIAN));
+		pizzas.add(new Pizza(4,"Woterfall", 300, Type.VEGETERIAN));
+		pizzas.add(new Pizza(5,"Woterfall", 250, Type.VEGETERIAN));
 		
-		discountFor4Pizzas = new DiscountForMoreThen4Pizzas(pizzas);
+		discountFor4Pizzas = new DiscountForMoreThen4Pizzas(pizzas,5);
 	}
 
 	@Test
@@ -45,19 +47,19 @@ public class DiscountForMoreThen4PizzasTest {
 	
 	@Test
 	public void shouldReturnFalseWhenLessThan4Pizzas(){
-		List<Pizza> pizzas = new ArrayList<>();
+		Set<Pizza> pizzas = new HashSet<>();
 		
 		pizzas.add(new Pizza("Good day", 100, Type.SEA));
 		pizzas.add(new Pizza("Blue sky", 200, Type.MEAT));
 		pizzas.add(new Pizza("Woterfall", 255, Type.VEGETERIAN));
 		
-		discountFor4Pizzas = new DiscountForMoreThen4Pizzas(pizzas);
+		discountFor4Pizzas = new DiscountForMoreThen4Pizzas(pizzas, 3);
 		assertFalse(discountFor4Pizzas.isApplicable());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionIfListOfPizzasIsNull(){
-		new DiscountForMoreThen4Pizzas(null);
+		new DiscountForMoreThen4Pizzas(null,7);
 	}
 
 }

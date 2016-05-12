@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
 
 import com.java.myrotiuk.domain.AccruedCard;
 import com.java.myrotiuk.domain.Customer;
