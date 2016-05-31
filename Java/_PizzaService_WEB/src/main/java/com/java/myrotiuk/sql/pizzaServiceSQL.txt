@@ -1,0 +1,56 @@
+create database pizza_service;
+
+create table pizza(
+id int unsigned auto_increment not null,
+
+name varchar(55) not null,
+
+price double not null,
+
+type varchar(55) not null,
+
+primary key(id)
+
+);
+
+insert into pizza(name, price, type) values ('Waterfall', 100.5, 'SEA');
+
+create table customer(
+id int unsigned auto_increment not null,
+name varchar(77) not null,
+primary key(id)
+);
+
+create table address(
+id int unsigned auto_increment not null,
+id_customer int unsigned not null,
+address varchar(255) not null,
+phone_number char(10) null,
+primary key(id),
+foreign key(id_customer) references customer(id)
+);
+
+create table acc_card(
+id_customer int unsigned not null,
+amount double not null,
+primary key(id_customer),
+foreign key(id_customer) references customer(id)
+);
+
+create table order_customer(
+id int unsigned auto_increment not null,
+id_customer int unsigned not null,
+order_price double default 0.0,
+order_status varchar(55) not null,
+primary key(id),
+foreign key(id_customer) references customer(id)
+);
+
+create table order_pizza(
+id_pizza int unsigned not null,
+id_order int unsigned not null,
+quantity int default 0,
+foreign key(id_pizza) references pizza(id),
+foreign key(id_order) references order_customer(id)
+);
+alter table order_customer add column delivery_address varchar(255) null after order_status;
