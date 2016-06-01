@@ -18,4 +18,6 @@ public interface CustomerService {
 	List<Address> getAllAddressByCustomer(Customer customer);
 	
 	Address chooseDeliveryAddress(long id_address);
+	
+	Customer findCustomer(long id);
 }

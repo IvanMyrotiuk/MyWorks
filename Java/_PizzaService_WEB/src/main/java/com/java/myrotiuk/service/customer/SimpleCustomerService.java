@@ -82,5 +82,10 @@ public class SimpleCustomerService implements CustomerService{
 	public Address chooseDeliveryAddress(long id_address){
 		return addressRepository.find(id_address);
 	}
+
+	@Override
+	public Customer findCustomer(long id) {
+		return customerRepository.find(id);
+	}
 	
 }

@@ -22,4 +22,9 @@ public class SimpleAddressService implements AddressService {
 		return addressRepository.find(id);
 	}
 
+	@Override
+	public void updateAddress(Address address) {
+		addressRepository.update(address);
+	}
+
 }

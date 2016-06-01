@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Address {
@@ -17,6 +18,7 @@ public class Address {
 	@ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
+	@Size(min = 5, max = 77, message = "address must be at least 5 characters")
 	private String address;
 	private String phoneNumber;
 	

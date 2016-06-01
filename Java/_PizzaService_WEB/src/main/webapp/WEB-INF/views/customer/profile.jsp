@@ -10,8 +10,8 @@
 Address:${address.address} 
 phoneNumber:${address.phoneNumber}
 customer name:${address.customer.name}
-customer email:${address.customer.email}
-
+customer email:${address.customer.email}<br/>
+<a href="customer/${address.id}/edit">Edit</a>
 
 </body>
 </html>
