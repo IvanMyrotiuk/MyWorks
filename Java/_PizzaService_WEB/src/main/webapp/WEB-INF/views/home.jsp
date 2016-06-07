@@ -11,6 +11,10 @@
 
 <div style="float: right;">
 	<a href="customer?doSingUp">Sing up</a>
+</div><br/>
+
+User:<div style="float: right;">
+	<a href="user?singup">Sing up</a>
 </div>
 <a href="customer/17/edit">Edit</a>
 <h2>Catalog of pizzas:</h2>

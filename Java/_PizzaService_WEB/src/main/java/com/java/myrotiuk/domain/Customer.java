@@ -14,14 +14,14 @@ public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@Size(min = 4, max = 40, message = "Username must be between 4 and 40 characters long.")
+	//@Size(min = 4, max = 40, message = "Username must be between 4 and 40 characters long.")
 	private String name;
 	@Pattern(regexp = "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,4}", message = "Invalide email address")
 	@NotNull
 	private String email;
-	@Size(min = 6, message = "password must be at least 6 charecter long")
-	@NotNull
-	private int password;
+	//@Size(min = 6, message = "password must be at least 6 charecter long")
+//	@NotNull
+//	private int password;
 	
 	public Customer() {
 	}
@@ -29,9 +29,13 @@ public class Customer {
 	public Customer(String name) {
 		this.name = name;
 	}
-
+	
 	public long getId() {
 		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -49,22 +53,18 @@ public class Customer {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	public void setPassword(int password){
+
+/*	public int getPassword() {
+		return password;
+	}
+
+	public void setPassword(int password) {
 		this.password = password;
-	}
-	
-	public int getPassword(){
-		return this.password;
-	}
+	}*/
 
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", email=" +  email+"]";
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 	
 }

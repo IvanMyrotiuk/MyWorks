@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import com.java.myrotiuk.domain.Address;
 import com.java.myrotiuk.domain.Customer;
 import com.java.myrotiuk.service.address.AddressService;
 import com.java.myrotiuk.service.customer.CustomerService;
+import com.java.myrotiuk.web.controllers.validators.CustomerValidator;
 
 @Controller
 @RequestMapping(value = "/customer")
@@ -30,21 +33,26 @@ public class CustomerController {
 	private AddressService addressService;
 	@Autowired
 	private CustomerService customerService;
+
 	
 	@RequestMapping( params = "doSingUp")
 	public String singUpCustomer(Model model){
-		model.addAttribute("customer", new Customer());
+		Address address = new Address();
+		address.setCustomer(new Customer());
+		model.addAttribute("address", address);
 		return "customer/singUp";
 	}
 	
 	@RequestMapping(params = "singup", method = RequestMethod.POST)
-	public String doSingUpCustomer(@ModelAttribute("customer") @Valid Customer customer, 
-			/*@ModelAttribute("address") @Valid */Address address, BindingResult bindingResult){
-		if(bindingResult.hasErrors()){
+	public String doSingUpCustomer(@Valid Address address, BindingResult  bindingResult,
+			@Valid Customer customer, BindingResult bindingResultCustomer,	Model model){
+		address.setCustomer(customer);
+		if( bindingResult.hasErrors() || bindingResultCustomer.hasErrors()){//
+			model.addAttribute("address", address);
 			loger.info("Binding result has an error!!!!!!!!!!!!!!!!!!!!");
+			loger.info(""+address);
 			return "customer/singUp";
 		}
-		address.setCustomer(customer);
 		loger.info("Customer->>"+customer);
 		loger.info("Address->>"+address);
 		addressService.saveAddress(address);

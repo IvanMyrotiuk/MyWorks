@@ -34,7 +34,11 @@ public class Address {
 	public long getId() {
 		return id;
 	}
-	
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -58,8 +62,6 @@ public class Address {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	
-	
 
 	@Override
 	public int hashCode() {
@@ -85,11 +87,7 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", customer=" + customer + ", address=" + address + ", phoneNumber=" + phoneNumber
+		return "Address [id=" + id + ", customer=" + customer + ", address=" + address +  ", phoneNumber=" + phoneNumber
 				+ "]";
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 }

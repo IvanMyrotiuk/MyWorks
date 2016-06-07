@@ -26,8 +26,7 @@ public class JPACustomerRepository implements CustomerRepository {
 
 	@Override
 	public Customer find(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return em.find(Customer.class, id);
 	}
 
 	@Override
@@ -44,8 +43,7 @@ public class JPACustomerRepository implements CustomerRepository {
 
 	@Override
 	public void update(Customer entity) {
-		// TODO Auto-generated method stub
-
+		em.merge(entity);
 	}
 
 	@Override

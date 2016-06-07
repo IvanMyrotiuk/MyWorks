@@ -20,4 +20,8 @@ public interface CustomerService {
 	Address chooseDeliveryAddress(long id_address);
 	
 	Customer findCustomer(long id);
+	
+	void saveCustomer(Customer customer);
+	
+	void updateCustomer(Customer customer);
 }

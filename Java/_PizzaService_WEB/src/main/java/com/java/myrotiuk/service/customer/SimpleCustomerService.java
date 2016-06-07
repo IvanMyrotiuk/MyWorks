@@ -87,5 +87,15 @@ public class SimpleCustomerService implements CustomerService{
 	public Customer findCustomer(long id) {
 		return customerRepository.find(id);
 	}
+
+	@Override
+	public void saveCustomer(Customer customer) {
+		customerRepository.insert(customer);
+	}
+
+	@Override
+	public void updateCustomer(Customer customer) {
+		customerRepository.update(customer);
+	}
 	
 }
