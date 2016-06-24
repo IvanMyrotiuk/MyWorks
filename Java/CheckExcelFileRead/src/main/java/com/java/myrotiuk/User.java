@@ -3,6 +3,7 @@ package com.java.myrotiuk;
 public class User {
 	private String name;
 	private String email;
+	private String hiperLink;
 	
 	public User(String name) {
 		this.name = name;
@@ -24,11 +25,16 @@ public class User {
 		this.email = email;
 	}
 
+	public String getHiperLink() {
+		return hiperLink;
+	}
+
+	public void setHiperLink(String hiperLink) {
+		this.hiperLink = hiperLink;
+	}
+
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", email=" + email + "]";
+		return "User [name=" + name + ", email=" + email + ", hiperLink=" + hiperLink + "]";
 	}
-	
-	
-	
 }

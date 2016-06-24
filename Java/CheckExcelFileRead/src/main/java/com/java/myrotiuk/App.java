@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -27,7 +28,7 @@ public class App
     	List<User> users = new ArrayList<>();
     	 try
          {
-    		 File fileToParse = new File("src/test.xlsx");
+    		 File fileToParse = new File("src/test3.xlsx");
 
              InputStream file = new FileInputStream(fileToParse);
              String nameOfFile = fileToParse.getName();
@@ -67,12 +68,14 @@ public class App
                          case Cell.CELL_TYPE_STRING:
                              //System.out.print(cell.getStringCellValue() + "t");
                              String userName = cell.getStringCellValue();
+                             Hyperlink hiperLink = cell.getHyperlink();
                              String[] splitedUserName = userName.trim().split("\\s");
                              if(splitedUserName.length > 1 && splitedUserName.length < 3){
                             	 String firstName = splitedUserName[0];
                             	 String lastName = splitedUserName[1];
                             	 User user = new User(userName);
                                  user.setEmail(firstName+"_"+lastName+"@epam.com");
+                                 user.setHiperLink(hiperLink.getAddress());
                                  users.add(user);
                              }else if(splitedUserName.length == 3){
                             	 String firstName = splitedUserName[0];
@@ -80,6 +83,9 @@ public class App
                             	 String lastName2 = splitedUserName[2];
                             	 User user = new User(userName);
                                  user.setEmail(firstName+"_"+lastName+"_"+lastName2+"@epam.com");
+                                 if(hiperLink != null){
+                                	 user.setHiperLink(hiperLink.getAddress()); 
+                                 }
                                  users.add(user);
                              }
                              break;
